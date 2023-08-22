@@ -1,0 +1,9 @@
+*.exe
+*.o
+out
+*.out
+*.aux
+*.dvi
+*.log
+*.synctex.gz
+*.toc
