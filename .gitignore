@@ -7,3 +7,4 @@ out
 *.log
 *.synctex.gz
 *.toc
+*/.vscode
