@@ -74,6 +74,11 @@ public class SpectatorModel extends IModel
             throw new CHWCDBInvalidParameterException(
                 "RefereeModel.addGame(Game): second player ID is less than 1"
             );
+
+        if (game.getFirstPlayerId() == game.getSecondPlayerId())
+            throw new CHWCDBInvalidParameterException(
+                "RefereeModel.addGame(Game): players are not different"
+            );
         
         game.setDuration(0);
         game.setResult(null);

@@ -1,5 +1,11 @@
 package entity.enums;
 
-public class Figure {
-    
+public enum Figure
+{
+    KING,
+    QUEEN,
+    ROOK,
+    BISHOP,
+    KNIGHT,
+    PAWN
 }
