@@ -13,7 +13,7 @@ import entity.enums.GameResult;
 import entity.GameMove;
 import appexception.*;
 
-public class RefereeModel extends IModel
+public class SpectatorModel extends IModel
 {
     private IDAO<Game> gameDAO;
     private IDAO<GameMove> gameMoveDAO;

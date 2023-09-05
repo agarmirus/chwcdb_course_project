@@ -44,4 +44,7 @@ public abstract class IModel
 
     public void addUser(final User user) throws CHWCDBException {}
     public void removeUser(final User user) throws CHWCDBException {}
+
+    public void addReferee(final Referee referee) throws CHWCDBException {}
+    public void removeReferee(final Referee referee) throws CHWCDBException {}
 }

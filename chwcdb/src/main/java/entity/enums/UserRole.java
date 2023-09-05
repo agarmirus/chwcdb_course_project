@@ -3,6 +3,6 @@ package entity.enums;
 public enum UserRole
 {
     ADMIN,
-    REFEREE,
+    SPECTATOR,
     BOOKMAKER
 }
