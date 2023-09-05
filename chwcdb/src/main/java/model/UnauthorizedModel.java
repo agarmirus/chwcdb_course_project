@@ -31,13 +31,17 @@ public class UnauthorizedModel extends IModel
             throw new CHWCDBInvalidParameterException(
                 "UnauthorizedModel.authorize(User): user is null"
             );
-        
-        if (user.getLogin() == null || user.getLogin().isEmpty())
+
+        String login = user.getLogin();
+
+        if (login == null || login.isEmpty())
             throw new CHWCDBInvalidParameterException(
                 "UnauthorizedModel.authorize(User): user doesn't have login"
             );
+
+        String hashedPswd = user.getHashedPassword();
         
-        if (user.getHashedPassword() == null || user.getHashedPassword().isEmpty())
+        if (hashedPswd == null || hashedPswd.isEmpty())
             throw new CHWCDBInvalidParameterException(
                 "UnauthorizedModel.authorize(User): user doesn't have hashed password"
             );
