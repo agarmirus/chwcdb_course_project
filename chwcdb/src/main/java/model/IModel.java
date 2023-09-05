@@ -30,14 +30,14 @@ public abstract class IModel
     public void addGame(final Game game) throws CHWCDBException {}
     public void removeGame(final Game game) throws CHWCDBException {}
     public void endGame(final Game game) throws CHWCDBException {}
-    public Optional<List<GameMove>> getGameMoves(final Game game) throws CHWCDBException { return Optional.empty(); }
+    public Optional<List<GameMove>> getGameInfo(final Game game) throws CHWCDBException { return Optional.empty(); }
 
     public void addMoves(final List<GameMove> moves) throws CHWCDBException {}
     public void removeMove(final GameMove move) throws CHWCDBException {}
 
-    public void addBet(final Bet bet, final Game game) throws CHWCDBException {}
+    public void addBet(final Bet bet) throws CHWCDBException {}
     public void removeBet(final Bet bet) throws CHWCDBException {}
-    public void updateBet(final Bet bet) throws CHWCDBException {}
+    public void updateBetStatus(final Bet bet) throws CHWCDBException {}
 
     public void addPlayer(final Player player) throws CHWCDBException {}
     public void removePlayer(final Player player) throws CHWCDBException {}

@@ -150,7 +150,7 @@ public class RefereeModel extends IModel
     }
 
     @Override
-    public Optional<List<GameMove>> getGameMoves(final Game game) throws CHWCDBException
+    public Optional<List<GameMove>> getGameInfo(final Game game) throws CHWCDBException
     {
         if (gameMoveDAO == null)
             throw new CHWCDBNullDAOException(
