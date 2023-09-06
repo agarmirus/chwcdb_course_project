@@ -196,6 +196,11 @@ public class SpectatorModel extends IModel
         {
             for (var gameMove: gameMoves)
             {
+                if (gameMove == null)
+                    throw new CHWCDBInvalidParameterException(
+                        "RefereeModel.addMoves(List<GameMove>): game move is null"
+                    );
+                    
                 Game game = gameMove.getGame();
 
                 if (game == null)
@@ -234,9 +239,9 @@ public class SpectatorModel extends IModel
                         "RefereeModel.addMoves(List<GameMove>): move doesn't have an end cell"
                     );
             }
-        }
 
-        gameMoveDAO.create(gameMoves);
+            gameMoveDAO.create(gameMoves);
+        }
     }
 
     @Override
