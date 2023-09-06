@@ -51,7 +51,13 @@ public class BookmakerModel extends IModel
             );
         
         for (var elemBet: bets)
+        {
+            if (elemBet == null)
+                throw new CHWCDBInvalidParameterException(
+                    "BookmakerModel.addBet(Bet): elementary bet is null"
+                );
             checkElementary(elemBet);
+        }
     }
 
     private void checkSystem(final Bet bet) throws CHWCDBException
@@ -141,6 +147,7 @@ public class BookmakerModel extends IModel
         else if (type == BetType.SYSTEM)
             checkSystem(bet);
         
+        bet.setStatus(BetStatus.NONE);
         betDAO.create(bet);
     }
 

@@ -36,18 +36,12 @@ public class Bet
     public Bet(
         final int id,
         final BetType type,
-        String condition,
-        final List<Bet> bets,
-        final double coefficient,
-        final int gameId
+        final List<Bet> bets
     )
     {
         this.id = id;
         this.type = type;
-        this.condition = condition;
         this.bets = bets;
-        this.coefficient = coefficient;
-        this.gameId = gameId;
 
         status = BetStatus.NONE;
     }
