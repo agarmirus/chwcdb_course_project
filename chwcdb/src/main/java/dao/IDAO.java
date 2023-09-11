@@ -9,6 +9,8 @@ import appexception.CHWCDBException;
 
 public interface IDAO<T>
 {
+    public void setConnection(String url, String user, String pswd) throws CHWCDBException;
+
     public Optional<T> get(final T entity) throws CHWCDBException;
     public Optional<List<T>> get(final List<T> entities) throws CHWCDBException;
     public Optional<List<T>> get(String attributeName, String value) throws CHWCDBException;
