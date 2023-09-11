@@ -437,7 +437,7 @@ public class PostgresPlayerDAO implements IDAO<Player>
                 );
             }
 
-            query += String.format(" where id = '%s';", entity.getId());
+            query += String.format(" where id = %d;", entity.getId());
 
             Statement statement = connection.createStatement();
             statement.executeQuery(query);
