@@ -14,47 +14,45 @@ import java.util.Optional;
 import appexception.*;
 import javafx.util.Pair;
 
-import entity.Player;
+import entity.Referee;
 
-public class PostgresPlayerDAO implements IDAO<Player>
+public class PostgresRefereeDAO implements IDAO<Referee>
 {
     private Connection connection;
 
-    private Optional<Player> getOneOptUser(ResultSet resultSet) throws SQLException
+    private Optional<Referee> getOneOptReferee(ResultSet resultSet) throws SQLException
     {
-        Player player = null;
+        Referee referee = null;
 
         if (resultSet.next())
-            player = new Player(
+            referee = new Referee(
                 resultSet.getInt("id"),
                 resultSet.getString("first_name"),
                 resultSet.getString("second_name"),
                 resultSet.getString("third_name"),
                 new Date(((java.sql.Date)resultSet.getObject("birth_date")).getTime()),
-                resultSet.getString("country"),
-                resultSet.getInt("raiting")
+                resultSet.getString("country")
             );
         
-        return Optional.ofNullable(player);
+        return Optional.ofNullable(referee);
     }
 
-    private Optional<List<Player>> fromResultSetToOptionalList(ResultSet resultSet) throws SQLException
+    private Optional<List<Referee>> fromResultSetToOptionalList(ResultSet resultSet) throws SQLException
     {
-        List<Player> lst = new ArrayList<Player>();
+        List<Referee> lst = new ArrayList<Referee>();
 
         while (resultSet.next())
         {
-            Player player = new Player(
+            Referee referee = new Referee(
                 resultSet.getInt("id"),
                 resultSet.getString("first_name"),
                 resultSet.getString("second_name"),
                 resultSet.getString("third_name"),
                 new Date(((java.sql.Date)resultSet.getObject("birth_date")).getTime()),
-                resultSet.getString("country"),
-                resultSet.getInt("raiting")
+                resultSet.getString("country")
             );
 
-            lst.add(player);
+            lst.add(referee);
         }
 
         if (lst.isEmpty())
@@ -63,52 +61,52 @@ public class PostgresPlayerDAO implements IDAO<Player>
         return Optional.of(lst);
     }
 
-    public PostgresPlayerDAO(
+    public PostgresRefereeDAO(
         String url,
-        String player,
+        String referee,
         String pswd
     ) throws Exception
     {
-        connection = DriverManager.getConnection(url, player, pswd);
+        connection = DriverManager.getConnection(url, referee, pswd);
     }
 
-    public void setConnection(String url, String player, String pswd) throws CHWCDBException
+    public void setConnection(String url, String referee, String pswd) throws CHWCDBException
     {
         try
         {
-            connection = DriverManager.getConnection(url, player, pswd);
+            connection = DriverManager.getConnection(url, referee, pswd);
         }
         catch (SQLException e)
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresPlayerDAO.setConnection(String, String, String): %s",
+                    "PostgresRefereeDAO.setConnection(String, String, String): %s",
                     e.getMessage()
                 )
             );
         }
     }
 
-    public Optional<Player> get(final Player entity) throws CHWCDBException
+    public Optional<Referee> get(final Referee entity) throws CHWCDBException
     {
         try
         {
             if (connection.isClosed() || !connection.isValid(0))
             {
                 throw new CHWCDBDataAccessException(
-                    "PostgresPlayerDAO.get(Player): no connection to data base"
+                    "PostgresRefereeDAO.get(Referee): no connection to data base"
                 );
             }
 
             String query = String.format(
-                "select * from players where id = %d;",
+                "select * from referees where id = %d;",
                 entity.getId()
             );
             
             Statement statement = connection.createStatement();
             ResultSet queryResult = statement.executeQuery(query);
 
-            var result = getOneOptUser(queryResult);
+            var result = getOneOptReferee(queryResult);
 
             return result;
         }
@@ -116,34 +114,34 @@ public class PostgresPlayerDAO implements IDAO<Player>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresPlayerDAO.get(Player): %s",
+                    "PostgresRefereeDAO.get(Referee): %s",
                     e.getMessage()
                 )
             );
         }
     }
 
-    public Optional<List<Player>> get(final List<Player> entities) throws CHWCDBException
+    public Optional<List<Referee>> get(final List<Referee> entities) throws CHWCDBException
     {
         try
         {
             if (connection.isClosed() || !connection.isValid(0))
             {
                 throw new CHWCDBDataAccessException(
-                    "PostgresPlayerDAO.get(List<Player>): no connection to data base"
+                    "PostgresRefereeDAO.get(List<Referee>): no connection to data base"
                 );
             }
 
             var iter = entities.listIterator();
 
             String query = String.format(
-                "select * from players where id = %d",
+                "select * from referees where id = %d",
                 iter.next().getId()
             );
 
             while (iter.hasNext())
                 query += String.format(
-                    " union select * from players where id = %d",
+                    " union select * from referees where id = %d",
                     iter.next().getId()
                 );
             
@@ -160,26 +158,26 @@ public class PostgresPlayerDAO implements IDAO<Player>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresPlayerDAO.get(List<Player>): %s",
+                    "PostgresRefereeDAO.get(List<Referee>): %s",
                     e.getMessage()
                 )
             );
         }
     }
 
-    public Optional<List<Player>> get(String attributeName, String value) throws CHWCDBException
+    public Optional<List<Referee>> get(String attributeName, String value) throws CHWCDBException
     {
         try
         {
             if (connection.isClosed() || !connection.isValid(0))
             {
                 throw new CHWCDBDataAccessException(
-                    "PostgresPlayerDAO.get(String, String): no connection to data base"
+                    "PostgresRefereeDAO.get(String, String): no connection to data base"
                 );
             }
 
             String query = String.format(
-                "select * from players where %s = '%s';",
+                "select * from referees where %s = '%s';",
                 attributeName,
                 value
             );
@@ -195,33 +193,32 @@ public class PostgresPlayerDAO implements IDAO<Player>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresPlayerDAO.get(String, String): %s",
+                    "PostgresRefereeDAO.get(String, String): %s",
                     e.getMessage()
                 )
             );
         }
     }
 
-    public void create(final Player entity) throws CHWCDBException
+    public void create(final Referee entity) throws CHWCDBException
     {
         try
         {
             if (connection.isClosed() || !connection.isValid(0))
             {
                 throw new CHWCDBDataAccessException(
-                    "PostgresPlayerDAO.create(Player): no connection to data base"
+                    "PostgresRefereeDAO.create(Referee): no connection to data base"
                 );
             }
 
             String query = String.format(
-                "insert into players values (%d, '%s', '%s', '%s', '%s', '%s', %d);",
+                "insert into referees values (%d, '%s', '%s', '%s', '%s', '%s');",
                 entity.getId(),
                 entity.getFirstName(),
                 entity.getSecondName(),
                 entity.getThirdName(),
                 new SimpleDateFormat("yyyy-MM-dd").format(entity.getBirthDate()),
-                entity.getCountry(),
-                entity.getRaiting()
+                entity.getCountry()
             );
             
             Statement statement = connection.createStatement();
@@ -231,21 +228,21 @@ public class PostgresPlayerDAO implements IDAO<Player>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresPlayerDAO.create(Player): %s",
+                    "PostgresRefereeDAO.create(Referee): %s",
                     e.getMessage()
                 )
             );
         }
     }
 
-    public void create(final List<Player> entities) throws CHWCDBException
+    public void create(final List<Referee> entities) throws CHWCDBException
     {
         try
         {
             if (connection.isClosed() || !connection.isValid(0))
             {
                 throw new CHWCDBDataAccessException(
-                    "PostgresPlayerDAO.create(List<Player>): no connection to data base"
+                    "PostgresRefereeDAO.create(List<Referee>): no connection to data base"
                 );
             }
 
@@ -253,14 +250,13 @@ public class PostgresPlayerDAO implements IDAO<Player>
             var obj = iter.next();
 
             String query = String.format(
-                "insert into players values (%d, '%s', '%s', '%s', '%s', '%s', %d)",
+                "insert into referees values (%d, '%s', '%s', '%s', '%s', '%s')",
                 obj.getId(),
                 obj.getFirstName(),
                 obj.getSecondName(),
                 obj.getThirdName(),
                 new SimpleDateFormat("yyyy-MM-dd").format(obj.getBirthDate()),
-                obj.getCountry(),
-                obj.getRaiting()
+                obj.getCountry()
             );
 
             while (iter.hasNext())
@@ -268,14 +264,13 @@ public class PostgresPlayerDAO implements IDAO<Player>
                 obj = iter.next();
 
                 query += String.format(
-                    ", (%d, '%s', '%s', '%s', '%s', '%s', %d)",
+                    ", (%d, '%s', '%s', '%s', '%s', '%s')",
                     obj.getId(),
                     obj.getFirstName(),
                     obj.getSecondName(),
                     obj.getThirdName(),
                     new SimpleDateFormat("yyyy-MM-dd").format(obj.getBirthDate()),
-                    obj.getCountry(),
-                    obj.getRaiting()
+                    obj.getCountry()
                 );
             }
             
@@ -288,32 +283,31 @@ public class PostgresPlayerDAO implements IDAO<Player>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresPlayerDAO.create(List<Player>): %s",
+                    "PostgresRefereeDAO.create(List<Referee>): %s",
                     e.getMessage()
                 )
             );
         }
     }
 
-    public void update(final Player entity) throws CHWCDBException
+    public void update(final Referee entity) throws CHWCDBException
     {
         try
         {
             if (connection.isClosed() || !connection.isValid(0))
             {
                 throw new CHWCDBDataAccessException(
-                    "PostgresPlayerDAO.update(Player): no connection to data base"
+                    "PostgresRefereeDAO.update(Referee): no connection to data base"
                 );
             }
 
             String query = String.format(
-                "update players set first_name = '%s', second_name = '%s', third_name = '%s', birth_date = '%s', country = '%s', raiting = '%s' where id = %d;",
+                "update referees set first_name = '%s', second_name = '%s', third_name = '%s', birth_date = '%s', country = '%s' where id = %d;",
                 entity.getFirstName(),
                 entity.getSecondName(),
                 entity.getThirdName(),
                 new SimpleDateFormat("yyyy-MM-dd").format(entity.getBirthDate()),
                 entity.getCountry(),
-                entity.getRaiting(),
                 entity.getId()
             );
 
@@ -324,21 +318,21 @@ public class PostgresPlayerDAO implements IDAO<Player>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresPlayerDAO.update(Player): %s",
+                    "PostgresRefereeDAO.update(Referee): %s",
                     e.getMessage()
                 )
             );
         }
     }
 
-    public void update(final List<Player> entities) throws CHWCDBException
+    public void update(final List<Referee> entities) throws CHWCDBException
     {
         try
         {
             if (connection.isClosed() || !connection.isValid(0))
             {
                 throw new CHWCDBDataAccessException(
-                    "PostgresBookDAO.update(List<Player>): no connection to data base"
+                    "PostgresBookDAO.update(List<Referee>): no connection to data base"
                 );
             }
             
@@ -347,13 +341,12 @@ public class PostgresPlayerDAO implements IDAO<Player>
             for (var entity: entities)
             {
                 query += String.format(
-                    "update players set first_name = '%s', second_name = '%s', third_name = '%s', birth_date = '%s', country = '%s', raiting = '%s' where id = %d;",
+                    "update referees set first_name = '%s', second_name = '%s', third_name = '%s', birth_date = '%s', country = '%s' where id = %d;",
                     entity.getFirstName(),
                     entity.getSecondName(),
                     entity.getThirdName(),
                     new SimpleDateFormat("yyyy-MM-dd").format(entity.getBirthDate()),
                     entity.getCountry(),
-                    entity.getRaiting(),
                     entity.getId()
                 );
             }
@@ -367,26 +360,26 @@ public class PostgresPlayerDAO implements IDAO<Player>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresPlayerDAO.update(List<Player>): %s",
+                    "PostgresRefereeDAO.update(List<Referee>): %s",
                     e.getMessage()
                 )
             );
         }
     }
 
-    public void update(final Player entity, String attributeName, String value) throws CHWCDBException
+    public void update(final Referee entity, String attributeName, String value) throws CHWCDBException
     {
         try
         {
             if (connection.isClosed() || !connection.isValid(0))
             {
                 throw new CHWCDBDataAccessException(
-                    "PostgresPlayerDAO.update(Player, String, String): no connection to data base"
+                    "PostgresRefereeDAO.update(Referee, String, String): no connection to data base"
                 );
             }
 
             String query = String.format(
-                "update players set %s = '%s' where id = %d;",
+                "update referees set %s = '%s' where id = %d;",
                 attributeName,
                 value,
                 entity.getId()
@@ -399,21 +392,21 @@ public class PostgresPlayerDAO implements IDAO<Player>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresPlayerDAO.update(Player, String, String): %s",
+                    "PostgresRefereeDAO.update(Referee, String, String): %s",
                     e.getMessage()
                 )
             );
         }
     }
 
-    public void update(final Player entity, List<Pair<String, String>> updates) throws CHWCDBException
+    public void update(final Referee entity, List<Pair<String, String>> updates) throws CHWCDBException
     {
         try
         {
             if (connection.isClosed() || !connection.isValid(0))
             {
                 throw new CHWCDBDataAccessException(
-                    "PostgresPlayerDAO.update(Player, List<Pair<String, String>>): no connection to data base"
+                    "PostgresRefereeDAO.update(Referee, List<Pair<String, String>>): no connection to data base"
                 );
             }
 
@@ -421,7 +414,7 @@ public class PostgresPlayerDAO implements IDAO<Player>
             var update = iter.next();
 
             String query = String.format(
-                "update players set %s = '%s'",
+                "update referees set %s = '%s'",
                 update.getKey(),
                 update.getValue()
             );
@@ -446,26 +439,26 @@ public class PostgresPlayerDAO implements IDAO<Player>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresPlayerDAO.update(Player, List<Pair<String, String>>): %s",
+                    "PostgresRefereeDAO.update(Referee, List<Pair<String, String>>): %s",
                     e.getMessage()
                 )
             );
         }
     }
     
-    public void update(final Player entity, String attributeName, final int delta) throws CHWCDBException
+    public void update(final Referee entity, String attributeName, final int delta) throws CHWCDBException
     {
         try
         {
             if (connection.isClosed() || !connection.isValid(0))
             {
                 throw new CHWCDBDataAccessException(
-                    "PostgresPlayerDAO.update(Player, String, int): no connection to data base"
+                    "PostgresRefereeDAO.update(Referee, String, int): no connection to data base"
                 );
             }
 
             String query = String.format(
-                "update players set %s = %s + %s where id = %d;",
+                "update referees set %s = %s + %s where id = %d;",
                 attributeName,
                 attributeName,
                 delta,
@@ -479,26 +472,26 @@ public class PostgresPlayerDAO implements IDAO<Player>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresPlayerDAO.update(Player, String, int): %s",
+                    "PostgresRefereeDAO.update(Referee, String, int): %s",
                     e.getMessage()
                 )
             );
         }
     }
 
-    public void delete(final Player entity) throws CHWCDBException
+    public void delete(final Referee entity) throws CHWCDBException
     {
         try
         {
             if (connection.isClosed() || !connection.isValid(0))
             {
                 throw new CHWCDBDataAccessException(
-                    "PostgresPlayerDAO.delete(Player): no connection to data base"
+                    "PostgresRefereeDAO.delete(Referee): no connection to data base"
                 );
             }
 
             String query = String.format(
-                "delete from players where id = %d;",
+                "delete from referees where id = %d;",
                 entity.getId()
             );
 
@@ -509,7 +502,7 @@ public class PostgresPlayerDAO implements IDAO<Player>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresPlayerDAO.delete(Player): %s",
+                    "PostgresRefereeDAO.delete(Referee): %s",
                     e.getMessage()
                 )
             );
