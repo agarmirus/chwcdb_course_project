@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Referee
 {
-    private int id;
+    private Integer id;
     private String firstName;
     private String secondName;
     private String thirdName;
@@ -13,7 +13,7 @@ public class Referee
 
     public Referee() {}
     public Referee(
-        final int id,
+        final Integer id,
         String firstName,
         String secondName,
         String thirdName,
@@ -29,7 +29,7 @@ public class Referee
         this.country = country;
     }
 
-    public void setId(final int id) { this.id = id; }
+    public void setId(final Integer id) { this.id = id; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public void setSecondName(String secondName) { this.secondName = secondName; }
     public void setThirdName(String thirdName) { this.thirdName = thirdName; }

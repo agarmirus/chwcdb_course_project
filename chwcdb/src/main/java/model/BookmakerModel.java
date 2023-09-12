@@ -51,13 +51,10 @@ public class BookmakerModel extends IModel
             );
         
         for (var elemBet: bets)
-        {
             if (elemBet == null)
                 throw new CHWCDBInvalidParameterException(
                     "BookmakerModel.addBet(Bet): elementary bet is null"
                 );
-            checkElementary(elemBet);
-        }
     }
 
     private void checkSystem(final Bet bet) throws CHWCDBException
@@ -70,7 +67,10 @@ public class BookmakerModel extends IModel
             );
         
         for (var express: bets)
-            checkExpress(express);
+            if (express == null)
+                throw new CHWCDBInvalidParameterException(
+                    "BookmakerModel.addBet(Bet): express bet is null"
+                );
     }
 
     public BookmakerModel() {}

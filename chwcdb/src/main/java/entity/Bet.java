@@ -7,21 +7,37 @@ import entity.enums.BetStatus;
 
 public class Bet
 {
-    private int id;
+    private Integer id;
     private BetType type;
     private String condition;
-    private double coefficient;
+    private Double coefficient;
     private List<Bet> bets;
     private BetStatus status;
-    private int gameId;
+    private Integer gameId;
 
     public Bet() {}
     public Bet(
-        final int id,
+        final Integer id,
         final BetType type,
         String condition,
-        final double coefficient,
-        final int gameId
+        final Double coefficient,
+        final BetStatus status,
+        final Integer gameId
+    )
+    {
+        this.id = id;
+        this.type = type;
+        this.condition = condition;
+        this.coefficient = coefficient;
+        this.gameId = gameId;
+        this.status = status;
+    }
+    public Bet(
+        final Integer id,
+        final BetType type,
+        String condition,
+        final Double coefficient,
+        final Integer gameId
     )
     {
         this.id = id;
@@ -34,7 +50,7 @@ public class Bet
     }
 
     public Bet(
-        final int id,
+        final Integer id,
         final BetType type,
         final List<Bet> bets
     )
@@ -46,19 +62,19 @@ public class Bet
         status = BetStatus.NONE;
     }
 
-    public void setId(final int id) { this.id = id; }
+    public void setId(final Integer id) { this.id = id; }
     public void setType(final BetType type) { this.type = type; }
     public void setCondition(String condition) { this.condition = condition; }
-    public void setCoefficient(final double coefficient) { this.coefficient = coefficient; }
+    public void setCoefficient(final Double coefficient) { this.coefficient = coefficient; }
     public void setBets(final List<Bet> bets) { this.bets = bets; }
     public void setStatus(final BetStatus status) { this.status = status; }
-    public void setGameId(final int gameId) { this.gameId = gameId; }
+    public void setGameId(final Integer gameId) { this.gameId = gameId; }
 
-    public int getId() { return id; }
+    public Integer getId() { return id; }
     public BetType getType() { return type; }
     public String getCondition() { return condition; }
-    public double getCoefficient() { return coefficient; }
+    public Double getCoefficient() { return coefficient; }
     public List<Bet> getBets() { return bets; }
     public BetStatus getStatus() { return status; }
-    public int getGameId() { return gameId; }
+    public Integer getGameId() { return gameId; }
 }
