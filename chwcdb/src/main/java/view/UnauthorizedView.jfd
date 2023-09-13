@@ -1,0 +1,35 @@
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.3" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {space :p:42:p, par t {comp label2:::p::p, comp label1:::p::p}, space s:::p, par l:::p {comp loginField::::229:x, comp passwordField::::229:x}, space ::36:x}, seq t {space ::130:x, comp signInButton:::p::p, space :p:127:p}}"
+			"$verticalGroup": "par l {seq l {space :p:60:p, par b {comp loginField::b:p::p, comp label1::b:p::p}, space :::p, par b {comp label2::b:p::p, comp passwordField::b:p::p}, space :p:28:p, comp signInButton:::p::p, space ::54:x}}"
+		} ) {
+			name: "this"
+			"resizable": false
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Login"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "loginField"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Password"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "signInButton"
+				"text": "Sign In (Worker)"
+			} )
+			add( new FormComponent( "javax.swing.JPasswordField" ) {
+				name: "passwordField"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 295, 165 )
+			"size": new java.awt.Dimension( 385, 260 )
+		} )
+	}
+}
