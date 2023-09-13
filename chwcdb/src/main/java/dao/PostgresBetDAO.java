@@ -2,10 +2,8 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,72 +11,11 @@ import appexception.*;
 import javafx.util.Pair;
 
 import entity.Bet;
-import entity.enums.BetStatus;
 import entity.enums.BetType;
 
 public class PostgresBetDAO implements IDAO<Bet>
 {
     private Connection connection;
-
-    private Bet getOneBet(ResultSet resultSet) throws SQLException
-    {
-        Bet bet = null;
-
-        if (resultSet.next())
-        {
-            BetType type = BetType.values()[resultSet.getInt("type")];
-
-            if (type == BetType.ELEMENTARY)
-            {
-                bet = new Bet(
-                    resultSet.getInt("id"),
-                    type,
-                    resultSet.getString("condition"),
-                    resultSet.getDouble("coefficient"),
-                    resultSet.getInt("gameId")
-                );
-            }
-            else
-            {
-                bet = new Bet(
-                    resultSet.getInt("id"),
-                    type,
-                    null
-                );
-            }
-        }
-        
-        return bet;
-    }
-
-    private List<Bet> getEnclosures(final int gameId) throws SQLException
-    {
-        String query = String.format(
-            "select id, type, condition, coefficient, status, game_id from bet_enclosures be join bets b on (b.id = be.enclosure_id and be.bet_id = %d) as encl_bets;",
-            gameId
-        );
-
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(query);
-
-        List<Bet> result = new ArrayList<Bet>();
-
-        while (resultSet.next())
-        {
-            result.add(
-                new Bet(
-                    resultSet.getInt("id"),
-                    BetType.values()[resultSet.getInt("type")],
-                    resultSet.getString("condition"),
-                    resultSet.getDouble("coefficient"),
-                    BetStatus.values()[resultSet.getInt("status")],
-                    resultSet.getInt("game_id")
-                )
-            );
-        }
-
-        return result;
-    }
 
     public PostgresBetDAO(
         String url,
@@ -108,51 +45,9 @@ public class PostgresBetDAO implements IDAO<Bet>
 
     public Optional<Bet> get(final Bet entity) throws CHWCDBException
     {
-        try
-        {
-            if (connection.isClosed() || !connection.isValid(0))
-            {
-                throw new CHWCDBDataAccessException(
-                    "PostgresBetDAO.get(Bet): no connection to data base"
-                );
-            }
-
-            String query = String.format(
-                "select * from bets where id = %d;",
-                entity.getId()
-            );
-            
-            Statement statement = connection.createStatement();
-            ResultSet queryResult = statement.executeQuery(query);
-
-            var result = getOneBet(queryResult);
-
-            if (result == null || result.getType() == BetType.ELEMENTARY)
-                return Optional.ofNullable(result);
-
-            result.setBets(new ArrayList<Bet>());
-
-            List<Bet> enclBets = getEnclosures(result.getId());
-
-            for (var enclBet: enclBets)
-            {
-                if (enclBet.getType() == BetType.EXPRESS)
-                    enclBet.setBets(getEnclosures(enclBet.getId()));
-                
-                result.getBets().add(enclBet);
-            }
-
-            return Optional.of(result);
-        }
-        catch (SQLException e)
-        {
-            throw new CHWCDBDataAccessException(
-                String.format(
-                    "PostgresBetDAO.get(Bet): %s",
-                    e.getMessage()
-                )
-            );
-        }
+        throw new CHWCDBDataAccessException(
+            "PostgresBetDAO.get(Bet): method is not implemented"
+        );
     }
 
     public Optional<List<Bet>> get(final List<Bet> entities) throws CHWCDBException
@@ -290,35 +185,9 @@ public class PostgresBetDAO implements IDAO<Bet>
     
     public void update(final Bet entity, String attributeName, final int delta) throws CHWCDBException
     {
-        try
-        {
-            if (connection.isClosed() || !connection.isValid(0))
-            {
-                throw new CHWCDBDataAccessException(
-                    "PostgresBetDAO.update(Bet, String, int): no connection to data base"
-                );
-            }
-
-            String query = String.format(
-                "update bets set %s = %s + %s where id = %d;",
-                attributeName,
-                attributeName,
-                delta,
-                entity.getId()
-            );
-
-            Statement statement = connection.createStatement();
-            statement.executeQuery(query);
-        }
-        catch (SQLException e)
-        {
-            throw new CHWCDBDataAccessException(
-                String.format(
-                    "PostgresBetDAO.update(Bet, String, int): %s",
-                    e.getMessage()
-                )
-            );
-        }
+        throw new CHWCDBDataAccessException(
+            "PostgresBetDAO.update(Bet, String, int): method is not implemented"
+        );
     }
 
     public void delete(final Bet entity) throws CHWCDBException
