@@ -10,6 +10,7 @@ public class Move
     private String endCell;
 
     public Move() {}
+    public Move(final Integer id) { this.id = id; }
     public Move(
         final int id,
         final Figure figure,

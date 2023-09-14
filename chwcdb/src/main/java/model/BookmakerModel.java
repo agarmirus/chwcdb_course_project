@@ -1,7 +1,11 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.json.JSONObject;
+import org.redisson.api.RQueue;
 
 import dao.IDAO;
 import entity.Bet;
@@ -15,6 +19,8 @@ public class BookmakerModel extends IModel
 {
     private IDAO<GameMove> gameMoveDAO;
     private IDAO<Bet> betDAO;
+
+    private RQueue<String> taskQueue;
 
     private void checkElementary(final Bet bet) throws CHWCDBException
     {
@@ -76,24 +82,14 @@ public class BookmakerModel extends IModel
     public BookmakerModel() {}
     public BookmakerModel(
         final IDAO<GameMove> gameMoveDAO,
-        final IDAO<Bet> betDAO
+        final IDAO<Bet> betDAO,
+        final RQueue<String> taskQueue
     )
     {
         this.gameMoveDAO = gameMoveDAO;
         this.betDAO = betDAO;
+        this.taskQueue = taskQueue;
     }
-
-    @Override
-    public void setBetDAO(final IDAO<Bet> dao) { betDAO = dao; }
-
-    @Override
-    public void setGameMoveDAO(final IDAO<GameMove> dao) { gameMoveDAO = dao; }
-
-    @Override
-    public IDAO<Bet> getBetDAO() { return betDAO; }
-
-    @Override
-    public IDAO<GameMove> getGameMoveDAO() { return gameMoveDAO; }
 
     @Override
     public Optional<List<GameMove>> getGameInfo(final Game game) throws CHWCDBException
@@ -197,6 +193,71 @@ public class BookmakerModel extends IModel
                 "BookmakerModel.updateBetStatus(Bet): bet doesn't have status"
             );
 
-        betDAO.update(bet, "status", status.ordinal());
+        betDAO.update(bet, "status", Integer.toString(status.ordinal()));
+    }
+
+    Bet getBetFromJSON(JSONObject jsonObject) throws Exception
+    {
+        BetType betType = BetType.values()[jsonObject.getInt("betType")];
+
+        if (betType == BetType.ELEMENTARY)
+            return new Bet(
+                jsonObject.getInt("id"),
+                betType,
+                jsonObject.getString("condition"),
+                jsonObject.getDouble("coefficient"),
+                jsonObject.getInt("gameId")
+            );
+        
+        var arr = jsonObject.getJSONArray("bets");
+
+        List<Bet> bets = new ArrayList<Bet>();
+
+        for (int i = 0; i < arr.length(); ++i)
+            bets.add(new Bet(arr.getJSONObject(i).getInt("id")));
+        
+        return new Bet(jsonObject.getInt("id"), betType, bets);
+    }
+
+    void performTask(String task) throws CHWCDBException
+    {
+        try
+        {
+            var jsonObject = new JSONObject(task);
+
+            String type = jsonObject.getString("type");
+            String op = jsonObject.getString("op");
+
+            if (type.equals("bet"))
+                if (op.equals("insert"))
+                    addBet(getBetFromJSON(jsonObject));
+                else if (op.equals("remove"))
+                    removeBet(new Bet(jsonObject.getInt("id")));
+                else if (op.equals("update"))
+                {
+                    var bet = new Bet(jsonObject.getInt("id"));
+                    bet.setStatus(BetStatus.values()[jsonObject.getInt("status")]);
+
+                    updateBetStatus(bet);
+                }
+        }
+        catch (Exception e)
+        {
+            throw new CHWCDBException("Task queue running error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void runTaskQueue() throws CHWCDBException
+    {
+        String task = taskQueue.poll();
+
+        while (task != null)
+        {
+            if (!task.isEmpty())
+                performTask(task);
+            
+            task = taskQueue.poll();
+        }
     }
 }

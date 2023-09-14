@@ -13,6 +13,7 @@ public class Player
     private Integer raiting;
 
     public Player() {}
+    public Player(final Integer id) { this.id = id; }
     public Player(
         final Integer id,
         String firstName,

@@ -16,6 +16,7 @@ public class Bet
     private Integer gameId;
 
     public Bet() {}
+    public Bet(final Integer id) { this.id = id; }
     public Bet(
         final Integer id,
         final BetType type,

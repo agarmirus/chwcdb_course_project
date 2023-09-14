@@ -1,14 +1,19 @@
 package model;
 
 import java.util.List;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Optional;
+
+import org.json.JSONObject;
+import org.redisson.api.RQueue;
 
 import javafx.util.Pair;
 
 import dao.IDAO;
 import entity.Game;
 import entity.Move;
+import entity.enums.Figure;
 import entity.enums.GameResult;
 import entity.GameMove;
 import appexception.*;
@@ -18,17 +23,18 @@ public class SpectatorModel extends IModel
     private IDAO<Game> gameDAO;
     private IDAO<GameMove> gameMoveDAO;
 
-    @Override
-    public void setGameDAO(final IDAO<Game> dao) { gameDAO = dao; }
+    private RQueue<String> taskQueue;
 
-    @Override
-    public void setGameMoveDAO(final IDAO<GameMove> dao) { gameMoveDAO = dao; }
-
-    @Override
-    public IDAO<Game> getGameDAO() { return gameDAO; }
-
-    @Override
-    public IDAO<GameMove> getGameMoveDAO() { return gameMoveDAO; }
+    public SpectatorModel(
+        final IDAO<Game> gameDAO,
+        final IDAO<GameMove> gameMoveDAO,
+        final RQueue<String> taskQueue
+    )
+    {
+        this.gameDAO = gameDAO;
+        this.gameMoveDAO = gameMoveDAO;
+        this.taskQueue = taskQueue;
+    }
 
     @Override
     public void addGame(final Game game) throws CHWCDBException
@@ -296,5 +302,97 @@ public class SpectatorModel extends IModel
             );
         
         gameMoveDAO.delete(gameMove);
+    }
+
+    Game getGameFromJSON(JSONObject jsonObject) throws Exception
+    {
+        return new Game(
+            jsonObject.getInt("id"),
+            jsonObject.getInt("round"),
+            null,
+            jsonObject.getInt("number"),
+            null,
+            new SimpleDateFormat("dd.MM.yyyy").parse(jsonObject.getString("date")),
+            jsonObject.getInt("refereeId"),
+            jsonObject.getInt("firstPlayerId"),
+            jsonObject.getInt("secondPlayerId")
+        );
+    }
+
+    GameMove getGameMoveFromJSON(JSONObject jsonObject) throws Exception
+    {
+        return new GameMove(
+            new Game(jsonObject.getInt("gameId")),
+            new Move(jsonObject.getInt("moveId")),
+            jsonObject.getString("comment")
+        );
+    }
+
+    List<GameMove> getGameMovesFromJSON(JSONObject jsonObject) throws Exception
+    {
+        List<GameMove> result = new ArrayList<GameMove>();
+
+        var game = new Game(jsonObject.getInt("gameId"));
+
+        var arr = jsonObject.getJSONArray("params");
+
+        for (int i = 0; i < arr.length(); ++i)
+            result.add(
+                new GameMove(
+                    game,
+                    new Move(
+                        0,
+                        Figure.values()[arr.getJSONObject(i).getInt("figure")],
+                        arr.getJSONObject(i).getString("startCell"),
+                        arr.getJSONObject(i).getString("endCell")
+                    ),
+                    arr.getJSONObject(i).getString("comment")
+                )
+            );
+        
+        return result;
+    }
+
+    void performTask(String task) throws CHWCDBException
+    {
+        try
+        {
+            var jsonObject = new JSONObject(task);
+
+            String type = jsonObject.getString("type");
+            String op = jsonObject.getString("op");
+
+            if (type.equals("game"))
+                if (op.equals("insert"))
+                    addGame(getGameFromJSON(jsonObject));
+                else if (op.equals("remove"))
+                    removeGame(new Game(jsonObject.getInt("id")));
+                else if (op.equals("end"))
+                    endGame(new Game(jsonObject.getInt("id")));
+            else if (type.equals("gameMove"))
+                if (op.equals("remove"))
+                    removeMove(getGameMoveFromJSON(jsonObject));
+                else if (op.equals("insertMany"))
+                    addMoves(getGameMovesFromJSON(jsonObject));
+                
+        }
+        catch (Exception e)
+        {
+            throw new CHWCDBException("Task queue running error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void runTaskQueue() throws CHWCDBException
+    {
+        String task = taskQueue.poll();
+
+        while (task != null)
+        {
+            if (!task.isEmpty())
+                performTask(task);
+            
+            task = taskQueue.poll();
+        }
     }
 }

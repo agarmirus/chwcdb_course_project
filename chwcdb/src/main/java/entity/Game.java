@@ -17,6 +17,7 @@ public class Game
     private Integer secondPlayerId;
 
     public Game() {}
+    public Game(final Integer id) { this.id = id; }
     public Game(
         final Integer id,
         final Integer round,

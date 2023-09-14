@@ -4,27 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import entity.*;
-import dao.IDAO;
 import appexception.CHWCDBException;
 
 public abstract class IModel
 {
-    public void setUserDAO(final IDAO<User> dao) {}
-    public void setBetDAO(final IDAO<Bet> dao) {}
-    public void setGameDAO(final IDAO<Game> dao) {}
-    public void setGameMoveDAO(final IDAO<GameMove> dao) {}
-    public void setMoveDAO(final IDAO<Move> dao) {}
-    public void setPlayerDAO(final IDAO<Player> dao) {}
-    public void setRefereeDAO(final IDAO<Referee> dao) {}
-
-    public IDAO<User> getUserDAO() { return null; }
-    public IDAO<Bet> getBetDAO() { return null; }
-    public IDAO<Game> getGameDAO() { return null; }
-    public IDAO<GameMove> getGameMoveDAO() { return null; }
-    public IDAO<Move> getMoveDAO() { return null; }
-    public IDAO<Player> getPlayerDAO() { return null; }
-    public IDAO<Referee> getRefereeDAO() { return null; }
-
     public Optional<User> authorize(final User user) throws CHWCDBException { return Optional.empty(); }
     
     public void addGame(final Game game) throws CHWCDBException {}
@@ -47,4 +30,8 @@ public abstract class IModel
 
     public void addReferee(final Referee referee) throws CHWCDBException {}
     public void removeReferee(final Referee referee) throws CHWCDBException {}
+
+    public void runTaskQueue() throws CHWCDBException {}
+
+    public void runTest() {}
 }

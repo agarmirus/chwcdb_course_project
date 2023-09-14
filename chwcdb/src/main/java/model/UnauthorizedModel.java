@@ -14,12 +14,6 @@ public class UnauthorizedModel extends IModel
     public UnauthorizedModel(final IDAO<User> userDAO) { this.userDAO = userDAO; }
 
     @Override
-    public void setUserDAO(final IDAO<User> dao) { userDAO = dao; }
-
-    @Override
-    public IDAO<User> getUserDAO() { return userDAO; }
-
-    @Override
     public Optional<User> authorize(final User user) throws CHWCDBException
     {
         if (userDAO == null)

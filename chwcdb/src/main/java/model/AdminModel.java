@@ -1,7 +1,11 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+
+import org.json.JSONObject;
+import org.redisson.api.RQueue;
 
 import dao.IDAO;
 import entity.Bet;
@@ -10,6 +14,7 @@ import entity.GameMove;
 import entity.Player;
 import entity.Referee;
 import entity.User;
+import entity.enums.UserRole;
 import appexception.*;
 
 public class AdminModel extends IModel
@@ -21,6 +26,8 @@ public class AdminModel extends IModel
     private IDAO<User> userDAO;
     private IDAO<Referee> refereeDAO;
 
+    private RQueue<String> taskQueue;
+
     public AdminModel() {}
     public AdminModel(
         final IDAO<Game> gameDAO,
@@ -28,7 +35,8 @@ public class AdminModel extends IModel
         final IDAO<Bet> betDAO,
         final IDAO<Player> playerDAO,
         final IDAO<User> userDAO,
-        final IDAO<Referee> refereeDAO
+        final IDAO<Referee> refereeDAO,
+        final RQueue<String> taskQueue
     )
     {
         this.gameDAO = gameDAO;
@@ -36,43 +44,8 @@ public class AdminModel extends IModel
         this.betDAO = betDAO;
         this.playerDAO = playerDAO;
         this.userDAO = userDAO;
+        this.taskQueue = taskQueue;
     }
-
-    @Override
-    public void setUserDAO(final IDAO<User> dao) { userDAO = dao; }
-
-    @Override
-    public void setBetDAO(final IDAO<Bet> dao) { betDAO = dao; }
-
-    @Override
-    public void setGameDAO(final IDAO<Game> dao) { gameDAO = dao; }
-
-    @Override
-    public void setGameMoveDAO(final IDAO<GameMove> dao) { gameMoveDAO = dao; }
-
-    @Override
-    public void setPlayerDAO(final IDAO<Player> dao) { playerDAO = dao; }
-
-    @Override
-    public void setRefereeDAO(final IDAO<Referee> dao) { refereeDAO = dao; }
-
-    @Override
-    public IDAO<User> getUserDAO() { return userDAO; }
-
-    @Override
-    public IDAO<Bet> getBetDAO() { return betDAO; }
-
-    @Override
-    public IDAO<Game> getGameDAO() { return gameDAO; }
-
-    @Override
-    public IDAO<GameMove> getGameMoveDAO() { return gameMoveDAO; }
-
-    @Override
-    public IDAO<Player> getPlayerDAO() { return playerDAO; }
-
-    @Override
-    public IDAO<Referee> getRefereeDAO() { return refereeDAO; }
 
     @Override
     public Optional<List<GameMove>> getGameInfo(final Game game) throws CHWCDBException
@@ -342,5 +315,76 @@ public class AdminModel extends IModel
             );
 
         refereeDAO.delete(referee);
+    }
+
+    Referee getRefereeFromJSON(JSONObject jsonObject) throws Exception
+    {
+        return new Referee(
+            jsonObject.getInt("id"),
+            jsonObject.getString("firstName"),
+            jsonObject.getString("secondName"),
+            jsonObject.getString("thirdName"),
+            new SimpleDateFormat("dd.MM.yyyy").parse(jsonObject.getString("birthDate")),
+            jsonObject.getString("country")
+        );
+    }
+
+    User getUserFromJSON(JSONObject jsonObject) throws Exception
+    {
+        return new User(
+            jsonObject.getString("login"),
+            jsonObject.getString("hashedPswd"),
+            UserRole.values()[jsonObject.getInt("role")]
+        );
+    }
+
+    void performTask(String task) throws CHWCDBException
+    {
+        try
+        {
+            var jsonObject = new JSONObject(task);
+
+            String type = jsonObject.getString("type");
+            String op = jsonObject.getString("op");
+
+            if (op.equals("insert"))
+            {
+                if (type.equals("referee"))
+                    addReferee(getRefereeFromJSON(jsonObject));
+                else if (type.equals("user"))
+                    addUser(getUserFromJSON(jsonObject));
+            }
+            else if (op.equals("remove"))
+            {
+                if (type.equals("game"))
+                    removeGame(new Game(jsonObject.getInt("id")));
+                else if (type.equals("bet"))
+                    removeBet(new Bet(jsonObject.getInt("id")));
+                else if (type.equals("player"))
+                    removePlayer(new Player(jsonObject.getInt("id")));
+                else if (type.equals("referee"))
+                    removeReferee(new Referee(jsonObject.getInt("id")));
+                else if (type.equals("user"))
+                    removeUser(new User(jsonObject.getString("login")));
+            }
+        }
+        catch (Exception e)
+        {
+            throw new CHWCDBException("Task queue running error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void runTaskQueue() throws CHWCDBException
+    {
+        String task = taskQueue.poll();
+
+        while (task != null)
+        {
+            if (!task.isEmpty())
+                performTask(task);
+            
+            task = taskQueue.poll();
+        }
     }
 }

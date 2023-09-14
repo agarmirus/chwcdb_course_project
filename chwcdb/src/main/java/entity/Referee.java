@@ -12,6 +12,7 @@ public class Referee
     private String country;
 
     public Referee() {}
+    public Referee(final Integer id) { this.id = id; }
     public Referee(
         final Integer id,
         String firstName,

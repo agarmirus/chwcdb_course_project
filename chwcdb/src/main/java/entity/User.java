@@ -9,6 +9,7 @@ public class User
     private UserRole role;
 
     public User() {}
+    public User(String login) { this.login = login; }
     public User(
         String login,
         String hashedPswd,
