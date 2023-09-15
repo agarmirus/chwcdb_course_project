@@ -75,9 +75,10 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
             }
 
             String query = String.format(
-                "select game_id, round, duration, number, result, date, referee_id, first_player_id, second_player_id, move_id, figure, start_cell, end_cell, comment" +
-                "from (select game_id, m.id as move_id, figure, start_cell, end_cell, comment from game_moves gm join moves m on gm.id = m.game_id where %s = %d)" +
-                "join games g on game_id = g.id;",
+                "select game_id, round, duration, number, m.number as move_number, result, date, referee_id, first_player_id, second_player_id, move_id, figure, start_cell, end_cell, comment " +
+                "from (select game_id, m.id as move_id, figure, start_cell, end_cell, comment from game_moves gm join moves m on gm.id = m.game_id where %s = %d) " +
+                "join games g on game_id = g.id " +
+                "order by move_number",
                 attributeName,
                 value
             );
@@ -110,7 +111,7 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
 
                 result.add(
                     new GameMove(
-                        game, move, resultSet.getString("comment")
+                        game, move, resultSet.getInt("move_number"), resultSet.getString("comment")
                     )
                 );
             }
@@ -183,16 +184,18 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
 
                 if (gameMovesQuery.isEmpty())
                     gameMovesQuery = String.format(
-                        "insert into game_moves values (%d, %d, '%s')",
+                        "insert into game_moves values (%d, %d, %d, '%s')",
                         game.getId(),
                         move.getId(),
+                        entity.getNumber(),
                         entity.getComment()
                     );
                 else
                     gameMovesQuery += String.format(
-                        ", (%d, %d, '%s')",
+                        ", (%d, %d, %d, '%s')",
                         game.getId(),
                         move.getId(),
+                        entity.getNumber(),
                         entity.getComment()
                     );
             }

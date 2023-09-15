@@ -324,6 +324,7 @@ public class SpectatorModel extends IModel
         return new GameMove(
             new Game(jsonObject.getInt("gameId")),
             new Move(jsonObject.getInt("moveId")),
+            jsonObject.getInt("number"),
             jsonObject.getString("comment")
         );
     }
@@ -346,6 +347,7 @@ public class SpectatorModel extends IModel
                         arr.getJSONObject(i).getString("startCell"),
                         arr.getJSONObject(i).getString("endCell")
                     ),
+                    arr.getJSONObject(i).getInt("number"),
                     arr.getJSONObject(i).getString("comment")
                 )
             );

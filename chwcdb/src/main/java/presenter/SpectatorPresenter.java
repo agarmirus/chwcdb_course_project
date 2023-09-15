@@ -268,6 +268,7 @@ public class SpectatorPresenter implements IPresenter
             elemJSONObject.put("startCell", move.getStartCell());
             elemJSONObject.put("endCell", move.getEndCell());
             elemJSONObject.put("comment", gameMove.getComment());
+            elemJSONObject.put("number", gameMove.getNumber());
 
             arr.put(elemJSONObject);
         }
