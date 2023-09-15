@@ -33,7 +33,7 @@ public class UnauthorizedView extends IView {
 		label2.setText("Password");
 
 		//---- signInButton ----
-		signInButton.setText("Sign In (Worker)");
+		signInButton.setText("Sign In");
 
 		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
 		contentPane.setLayout(contentPaneLayout);
