@@ -12,6 +12,7 @@ import entity.GameMove;
 import entity.enums.BetStatus;
 import entity.enums.BetType;
 import entity.enums.GameResult;
+import entity.enums.UserRole;
 import presenter.IPresenter;
 
 public abstract class IView extends JFrame
@@ -60,6 +61,10 @@ public abstract class IView extends JFrame
 	public String getRefereeThirdName() { return null; }
 	public Date getRefereeBirthDate() { return null; }
 	public String getRefereeCountry() { return null; }
+
+	public String getUserLogin() { return null; }
+	public String getUserPassword() { return null; }
+	public UserRole getUserRole() { return null; }
 
 	public void setGameId(final Integer id) {}
 	public void setGameRound(final Integer round) {}

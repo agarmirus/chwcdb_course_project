@@ -338,6 +338,19 @@ public class AdminModel extends IModel
         );
     }
 
+    Player getPlayerFromJSON(JSONObject jsonObject) throws Exception
+    {
+        return new Player(
+            jsonObject.getInt("id"),
+            jsonObject.getString("firstName"),
+            jsonObject.getString("secondName"),
+            jsonObject.getString("thirdName"),
+            new SimpleDateFormat("dd.MM.yyyy").parse(jsonObject.getString("birthDate")),
+            jsonObject.getString("country"),
+            jsonObject.getInt("raiting")
+        );
+    }
+
     void performTask(String task) throws CHWCDBException
     {
         try
@@ -353,6 +366,8 @@ public class AdminModel extends IModel
                     addReferee(getRefereeFromJSON(jsonObject));
                 else if (type.equals("user"))
                     addUser(getUserFromJSON(jsonObject));
+                else if (type.equals("player"))
+                    addPlayer(getPlayerFromJSON(jsonObject));
             }
             else if (op.equals("remove"))
             {

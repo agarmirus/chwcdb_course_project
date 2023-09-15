@@ -11,6 +11,7 @@ import javax.swing.LayoutStyle;
 import javax.swing.table.*;
 
 import entity.enums.GameResult;
+import entity.enums.UserRole;
 import presenter.IPresenter;
 
 public class AdminView extends IView {
@@ -815,6 +816,24 @@ public class AdminView extends IView {
 	public String getRefereeCountry()
 	{
 		return refereeCountryField.getText().strip();
+	}
+
+	@Override
+	public String getUserLogin()
+	{
+		return userLoginField.getText().strip();
+	}
+
+	@Override
+	public String getUserPassword()
+	{
+		return userPasswordField.getText().strip();
+	}
+
+	@Override
+	public UserRole getUserRole()
+	{
+		return UserRole.values()[userRoleBox.getSelectedIndex()];
 	}
 
 	@Override
