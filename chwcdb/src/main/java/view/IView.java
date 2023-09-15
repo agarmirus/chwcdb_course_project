@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import entity.Bet;
 import entity.GameMove;
 import entity.enums.BetStatus;
 import entity.enums.BetType;
@@ -41,8 +42,9 @@ public abstract class IView extends JFrame
 	public Integer getBetId() { return null; }
 	public BetType getBetType() { return null; }
 	public String getBetCondition() { return null; }
-	public Integer geBetCoefficient() { return null; }
+	public Double getBetCoefficient() { return null; }
 	public BetStatus getBetStatus() { return null; }
+	public List<Bet> getEnclosureBets() { return null; }
 
 	public Integer getPlayerId() { return null; }
 	public String getPlayerFirstName() { return null; }

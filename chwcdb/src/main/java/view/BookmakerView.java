@@ -3,13 +3,16 @@ package view;
 import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle;
 import javax.swing.table.*;
 
+import entity.Bet;
 import entity.enums.BetStatus;
 import entity.enums.BetType;
 import entity.enums.GameResult;
@@ -53,19 +56,21 @@ public class BookmakerView extends IView {
 		label13 = new JLabel();
 		label15 = new JLabel();
 		enclBetsIdField = new JTextField();
-		gameInfoButton2 = new JButton();
 		label16 = new JLabel();
 		betStatusBox = new JComboBox<>();
 		setBetStatusButton = new JButton();
-		gameInfoButton4 = new JButton();
 		signOutButton = new JButton();
+		addBetButton = new JButton();
+		removeBetButton = new JButton();
 
 		//======== this ========
 		Container contentPane = getContentPane();
 
 		gameInfoButton.setActionCommand("gameinfo");
-		signOutButton.setActionCommand("signout");
 		setBetStatusButton.setActionCommand("betstatus");
+		signOutButton.setActionCommand("signout");
+		addBetButton.setActionCommand("addbet");
+		removeBetButton.setActionCommand("removebet");
 
 		//---- label1 ----
 		label1.setText("Game ID:");
@@ -151,9 +156,6 @@ public class BookmakerView extends IView {
 		//---- label15 ----
 		label15.setText("Enclosure Bets IDs:");
 
-		//---- gameInfoButton2 ----
-		gameInfoButton2.setText("Add Bet");
-
 		//---- label16 ----
 		label16.setText("Bet Status:");
 
@@ -167,11 +169,14 @@ public class BookmakerView extends IView {
 		//---- setBetStatusButton ----
 		setBetStatusButton.setText("Set Bet Status");
 
-		//---- gameInfoButton4 ----
-		gameInfoButton4.setText("Remove Bet");
-
 		//---- signOutButton ----
 		signOutButton.setText("Sign Out");
+
+		//---- addBetButton ----
+		addBetButton.setText("Add Bet");
+
+		//---- removeBetButton ----
+		removeBetButton.setText("Remove Bet");
 
 		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
 		contentPane.setLayout(contentPaneLayout);
@@ -206,134 +211,128 @@ public class BookmakerView extends IView {
 						.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
 							.addContainerGap()
 							.addGroup(contentPaneLayout.createParallelGroup()
-								.addComponent(signOutButton, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-								.addComponent(gameInfoButton, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE))
+								.addComponent(gameInfoButton, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+								.addComponent(signOutButton, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE))
 							.addGap(26, 26, 26)))
+					.addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 427, GroupLayout.PREFERRED_SIZE)
 					.addGroup(contentPaneLayout.createParallelGroup()
-						.addGroup(contentPaneLayout.createSequentialGroup()
-							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 480, Short.MAX_VALUE)
+						.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+							.addGap(0, 51, Short.MAX_VALUE)
 							.addComponent(label16)
 							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 							.addComponent(betStatusBox, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 							.addComponent(setBetStatusButton, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-							.addGap(26, 26, 26))
-						.addGroup(contentPaneLayout.createSequentialGroup()
-							.addGroup(contentPaneLayout.createParallelGroup()
-								.addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 427, GroupLayout.PREFERRED_SIZE)
-								.addGroup(contentPaneLayout.createSequentialGroup()
-									.addGap(131, 131, 131)
-									.addGroup(contentPaneLayout.createParallelGroup()
-										.addComponent(gameInfoButton4, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-										.addComponent(gameInfoButton2, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE))))
+							.addGap(28, 28, 28))
+						.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
 							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
 							.addGroup(contentPaneLayout.createParallelGroup()
 								.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-										.addComponent(label10)
-										.addComponent(label11)
-										.addComponent(label12)
-										.addComponent(label13))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-										.addComponent(coefSpinner)
-										.addComponent(betTypeBox)
-										.addComponent(betIdSpinner)
-										.addComponent(conditionField)))
+									.addComponent(addBetButton, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+									.addGap(18, 18, 18)
+									.addComponent(removeBetButton, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+									.addGap(38, 38, 38))
 								.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-									.addComponent(label15)
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addComponent(enclBetsIdField, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)))
-							.addGap(77, 77, 77))))
+									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+										.addGroup(contentPaneLayout.createSequentialGroup()
+											.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+												.addComponent(label10)
+												.addComponent(label11)
+												.addComponent(label12)
+												.addComponent(label13))
+											.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+											.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+												.addComponent(coefSpinner)
+												.addComponent(betTypeBox)
+												.addComponent(betIdSpinner)
+												.addComponent(conditionField)))
+										.addGroup(contentPaneLayout.createSequentialGroup()
+											.addComponent(label15)
+											.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+											.addComponent(enclBetsIdField, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)))
+									.addGap(77, 77, 77))))))
 		);
 		contentPaneLayout.setVerticalGroup(
 			contentPaneLayout.createParallelGroup()
 				.addGroup(contentPaneLayout.createSequentialGroup()
-					.addGroup(contentPaneLayout.createParallelGroup()
+					.addGap(40, 40, 40)
+					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 						.addGroup(contentPaneLayout.createSequentialGroup()
-							.addGroup(contentPaneLayout.createParallelGroup()
-								.addGroup(contentPaneLayout.createSequentialGroup()
-									.addGap(192, 192, 192)
-									.addComponent(gameInfoButton2)
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addComponent(gameInfoButton4)
-									.addGap(59, 59, 59))
-								.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-									.addContainerGap()
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label10)
-										.addComponent(betIdSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label11)
-										.addComponent(betTypeBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label12)
-										.addComponent(conditionField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(coefSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(label13))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label15)
-										.addComponent(enclBetsIdField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addGap(63, 63, 63)))
 							.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(label16)
-								.addComponent(betStatusBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(setBetStatusButton)))
-						.addGroup(contentPaneLayout.createSequentialGroup()
-							.addGap(40, 40, 40)
-							.addGroup(contentPaneLayout.createParallelGroup()
-								.addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 446, GroupLayout.PREFERRED_SIZE)
-								.addGroup(contentPaneLayout.createSequentialGroup()
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label1)
-										.addComponent(gameIdSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label2)
-										.addComponent(roundSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label3)
-										.addComponent(numberSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label4)
-										.addComponent(dateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label5)
-										.addComponent(refereeIdSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label6)
-										.addComponent(firstPlayerIdSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label7)
-										.addComponent(secondPlayerIdSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addGap(18, 18, 18)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label8)
-										.addComponent(durationSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(label9)
-										.addComponent(resultBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addGap(18, 18, 18)
-									.addComponent(gameInfoButton)
-									.addGap(93, 93, 93)
-									.addComponent(signOutButton)))))
+								.addComponent(label1)
+								.addComponent(gameIdSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(label2)
+								.addComponent(roundSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(label3)
+								.addComponent(numberSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(label4)
+								.addComponent(dateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(label5)
+								.addComponent(refereeIdSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(label6)
+								.addComponent(firstPlayerIdSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(label7)
+								.addComponent(secondPlayerIdSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(18, 18, 18)
+							.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(label8)
+								.addComponent(durationSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(label9)
+								.addComponent(resultBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(18, 18, 18)
+							.addComponent(gameInfoButton)
+							.addGap(93, 93, 93)
+							.addComponent(signOutButton))
+						.addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 446, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap(32, Short.MAX_VALUE))
+				.addGroup(contentPaneLayout.createSequentialGroup()
+					.addContainerGap(95, Short.MAX_VALUE)
+					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(label10)
+						.addComponent(betIdSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(label11)
+						.addComponent(betTypeBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(label12)
+						.addComponent(conditionField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(coefSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(label13))
+					.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(enclBetsIdField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(label15))
+					.addGap(42, 42, 42)
+					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(removeBetButton)
+						.addComponent(addBetButton))
+					.addGap(86, 86, 86)
+					.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(label16)
+						.addComponent(betStatusBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(setBetStatusButton))
+					.addGap(96, 96, 96))
 		);
 		pack();
 		setLocationRelativeTo(getOwner());
-
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 
 	private JLabel label1;
@@ -367,12 +366,12 @@ public class BookmakerView extends IView {
 	private JLabel label13;
 	private JLabel label15;
 	private JTextField enclBetsIdField;
-	private JButton gameInfoButton2;
 	private JLabel label16;
 	private JComboBox<String> betStatusBox;
 	private JButton setBetStatusButton;
-	private JButton gameInfoButton4;
 	private JButton signOutButton;
+	private JButton addBetButton;
+	private JButton removeBetButton;
 
 	@Override
 	public void setPresenterListener(final IPresenter listener)
@@ -380,10 +379,14 @@ public class BookmakerView extends IView {
 		removeAllButtonListeners(signOutButton);
 		removeAllButtonListeners(gameInfoButton);
 		removeAllButtonListeners(setBetStatusButton);
+		removeAllButtonListeners(addBetButton);
+		removeAllButtonListeners(removeBetButton);
 
 		gameInfoButton.addActionListener(listener);
 		signOutButton.addActionListener(listener);
 		setBetStatusButton.addActionListener(listener);
+		removeBetButton.addActionListener(listener);
+		addBetButton.addActionListener(listener);
 	}
 
 	@Override
@@ -480,15 +483,38 @@ public class BookmakerView extends IView {
 	}
 
 	@Override
-	public Integer geBetCoefficient()
+	public Double getBetCoefficient()
 	{
-		return (Integer)coefSpinner.getValue();
+		return (Double)coefSpinner.getValue();
 	}
 
 	@Override
 	public BetStatus getBetStatus()
 	{
 		return BetStatus.values()[betStatusBox.getSelectedIndex()];
+	}
+
+	@Override
+	public List<Bet> getEnclosureBets()
+	{
+		try
+		{
+			String[] idStrs = enclBetsIdField.getText().split(";");
+			List<Bet> result = new ArrayList<Bet>();
+
+			for (var idStr: idStrs)
+			{
+				Integer id = Integer.parseInt(idStr);
+
+				result.add(new Bet(id));
+			}
+
+			return result;
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
 	}
 
 	@Override
