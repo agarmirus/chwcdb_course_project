@@ -78,7 +78,7 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
                 "select game_id, round, duration, number, m.number as move_number, result, date, referee_id, first_player_id, second_player_id, move_id, figure, start_cell, end_cell, comment " +
                 "from (select game_id, m.id as move_id, figure, start_cell, end_cell, comment from game_moves gm join moves m on gm.id = m.game_id where %s = %d) " +
                 "join games g on game_id = g.id " +
-                "order by move_number",
+                "order by move_number;",
                 attributeName,
                 value
             );

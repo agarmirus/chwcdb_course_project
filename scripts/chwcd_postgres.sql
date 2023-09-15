@@ -148,9 +148,9 @@ $update_bets_status_trigger$
 		for bet in select * from bets
 		loop
 			if bet.type == 0 then
-				if bet.game_id == new.id then
+				if bet.game_id == old.id then
 					if is_main_line(bet.condition) then
-						if is_achieved(bet.condition, new.result) then
+						if is_achieved(bet.condition, old.result) then
 							update bets set status = 1 where id = bet.id;
 						else
 							update bets set status = 2 where id = bet.id;
@@ -170,22 +170,206 @@ $update_bets_status_trigger$
 					from game_moves gm join bets b on enclosure_id = id
 					where bet_id = bet.id
 				loop
-					express_status = new_express_status(express, new);
+					express_status = new_express_status(express, old);
 					if express_status != express.status then
 						update bets set status = express_status where id = express.id;
 					end if;
 				end loop;
 			end if;
 		end loop;
-		return new;
+		return null;
 	end;
 $update_bets_status_trigger$
 language plpgsql;
 
+create trigger update_bets_status_trigger
+after update of result on games
+for each row
+execute function update_bets_status();
+
 create or replace function remove_next_moves() returns trigger as
 $remove_next_moves_trigger$
 	begin
-    	
+    	delete from game_moves where move_id >= old.move_id and game_id == old.game_id;
+        delete from moves where id not in (select move_id from game_moves);
 	end;
 $remove_next_moves_trigger$
 language plpgsql;
+
+create or replace trigger remove_next_moves_trigger
+after delete on game_moves
+execute function remove_next_moves();
+
+create function weak_player_win_prob(diff int) returns real as 
+$$
+    begin
+        if diff >= 0 and diff <= 3 then
+            return 0.5;
+        elsif diff >= 4 and diff <= 10 then
+            return 0.49;
+        elsif diff >= 11 and diff <= 17 then
+            return 0.48;
+        elsif diff >= 18 and diff <= 25 then
+            return 0.47;
+        elsif diff >= 26 and diff <= 32 then
+            return 0.46;
+        elsif diff >= 33 and diff <= 39 then
+            return 0.45;
+        elsif diff >= 40 and diff <= 46 then
+            return 0.44;
+        elsif diff >= 47 and diff <= 53 then
+            return 0.43;
+        elsif diff >= 54 and diff <= 61 then
+            return 0.42;
+        elsif diff >= 62 and diff <= 68 then
+            return 0.41;
+        elsif diff >= 69 and diff <= 76 then
+            return 0.4;
+        elsif diff >= 77 and diff <= 83 then
+            return 0.39;
+        elsif diff >= 84 and diff <= 91 then
+            return 0.38;
+        elsif diff >= 92 and diff <= 98 then
+            return 0.37;
+        elsif diff >= 99 and diff <= 106 then
+            return 0.36;
+        elsif diff >= 107 and diff <= 113 then
+            return 0.35;
+        elsif diff >= 114 and diff <= 121 then
+            return 0.34;
+        elsif diff >= 122 and diff <= 129 then
+            return 0.33;
+        elsif diff >= 130 and diff <= 137 then
+            return 0.32;
+        elsif diff >= 138 and diff <= 145 then
+            return 0.31;
+        elsif diff >= 146 and diff <= 153 then
+            return 0.3;
+        elsif diff >= 154 and diff <= 162 then
+            return 0.29;
+        elsif diff >= 163 and diff <= 170 then
+            return 0.28;
+        elsif diff >= 171 and diff <= 179 then
+            return 0.27;
+        elsif diff >= 180 and diff <= 188 then
+            return 0.26;
+        elsif diff >= 189 and diff <= 197 then
+            return 0.25;
+        elsif diff >= 198 and diff <= 206 then
+            return 0.24;
+        elsif diff >= 207 and diff <= 215 then
+            return 0.23;
+        elsif diff >= 216 and diff <= 225 then
+            return 0.22;
+        elsif diff >= 226 and diff <= 235 then
+            return 0.21;
+        elsif diff >= 236 and diff <= 245 then
+            return 0.2;
+        elsif diff >= 246 and diff <= 256 then
+            return 0.19;
+        elsif diff >= 257 and diff <= 267 then
+            return 0.18;
+        elsif diff >= 268 and diff <= 278 then
+            return 0.17;
+        elsif diff >= 279 and diff <= 290 then
+            return 0.16;
+        elsif diff >= 291 and diff <= 302 then
+            return 0.15;
+        elsif diff >= 303 and diff <= 315 then
+            return 0.14;
+        elsif diff >= 316 and diff <= 328 then
+            return 0.13;
+        elsif diff >= 329 and diff <= 344 then
+            return 0.12;
+        elsif diff >= 345 and diff <= 357 then
+            return 0.11;
+        elsif diff >= 358 and diff <= 374 then
+            return 0.1;
+        elsif diff >= 375 and diff <= 391 then
+            return 0.09;
+        elsif diff >= 392 and diff <= 411 then
+            return 0.08;
+        elsif diff >= 412 and diff <= 432 then
+            return 0.07;
+        elsif diff >= 433 and diff <= 456 then
+            return 0.06;
+        elsif diff >= 457 and diff <= 484 then
+            return 0.05;
+        elsif diff >= 485 and diff <= 517 then
+            return 0.04;
+        elsif diff >= 518 and diff <= 559 then
+            return 0.03;
+        elsif diff >= 560 and diff <= 619 then
+            return 0.02;
+        elsif diff >= 620 and diff <= 735 then
+            return 0.01;
+        end if;
+        return 0.0;
+    end;
+$$
+language plpgsql;
+
+create or replace function update_raitings() returns trigger as
+$update_raitings_trigger$
+    declare
+        prob1 real;
+        prob2 real;
+        raiting1 int;
+        raiting2 int;
+        new_raiting1 int;
+        new_raiting2 int;
+        delta1 int;
+        delta2 int;
+        raiting_delta1 int;
+        raiting_delta2 int;
+    begin
+    	select raiting into raiting1 from players where id = new.first_player_id;
+        select raiting into raiting2 from players where id = new.second_player_id;
+        
+        if (raiting1 > raiting2) then
+            select weak_player_win_prob(raiting1 - raiting2) into prob2;
+            prob1 = 1.0 - prob2;
+        else
+            select weak_player_win_prob(raiting2 - raiting1) into prob1;
+            prob2 = 1.0 - prob1;
+        end if;
+    
+        if new.result == 0 then
+            delta1 = 0.5 - prob1;
+            delta2 = 0.5 - prob2;
+        elsif new.result == 1 then
+            delta1 = 1 - prob1;
+            delta2 = -1 * prob2;
+        else
+            delta1 = -1 * prob1;
+            delta2 = 1 - prob2;
+        end if;
+    
+        if raiting1 <= 2400 then
+            raiting_delta1 = delta1 * 20;
+        else
+            raiting_delta1 = delta1 * 10;
+        end if;
+        if raiting2 <= 2400 then
+            raiting_delta2 = delta2 * 20;
+        else
+            raiting_delta2 = delta2 * 10;
+        end if;
+        if raiting_delta1 > 700 then
+            raiting_delta1 = 700;
+        end if;
+        if raiting_delta2 > 700 then
+            raiting_delta2 = 700;
+        end if;
+        update players set raiting = raiting + raiting_delta1 where id = new.first_player_id;
+        update players set raiting = raiting + raiting_delta2 where id = new.second_player_id;
+    
+        return new;
+    end;
+$update_raitings_trigger$
+language plpgsql;
+
+create trigger update_raitings_trigger
+after update of result on games
+for each row 
+execute function update_raitings();
