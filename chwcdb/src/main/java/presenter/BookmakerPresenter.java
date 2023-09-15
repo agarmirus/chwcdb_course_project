@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.redisson.api.RQueue;
+import org.redisson.api.RedissonClient;
 
 import appexception.CHWCDBInvalidInputException;
 import entity.Bet;
@@ -28,13 +29,14 @@ public class BookmakerPresenter implements IPresenter
         final IModel model,
         final IView view,
         final IRegulator regulator,
-        final RQueue<String> taskQueue
+        final RedissonClient client
     )
     {
         this.model = model;
         this.view = view;
         this.regulator = regulator;
-        this.taskQueue = taskQueue;
+
+        taskQueue = client.getQueue("taskqueue");
     }
 
     void gameInfo() throws Exception

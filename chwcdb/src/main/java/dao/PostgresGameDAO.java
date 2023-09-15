@@ -16,7 +16,7 @@ import javafx.util.Pair;
 import entity.Game;
 import entity.enums.GameResult;
 
-public class PostgresGameDAO
+public class PostgresGameDAO implements IDAO<Game>
 {
     private Connection connection;
 

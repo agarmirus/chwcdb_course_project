@@ -44,6 +44,7 @@ public class AdminModel extends IModel
         this.betDAO = betDAO;
         this.playerDAO = playerDAO;
         this.userDAO = userDAO;
+        this.refereeDAO = refereeDAO;
         this.taskQueue = taskQueue;
     }
 

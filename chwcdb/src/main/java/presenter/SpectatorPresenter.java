@@ -7,6 +7,7 @@ import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.redisson.api.RQueue;
+import org.redisson.api.RedissonClient;
 
 import appexception.CHWCDBInvalidInputException;
 import entity.Game;
@@ -26,13 +27,14 @@ public class SpectatorPresenter implements IPresenter
         final IModel model,
         final IView view,
         final IRegulator regulator,
-        final RQueue<String> taskQueue
+        final RedissonClient client
     )
     {
         this.model = model;
         this.view = view;
         this.regulator = regulator;
-        this.taskQueue = taskQueue;
+
+        taskQueue = client.getQueue("taskqueue");
     }
 
     void addGame() throws Exception
