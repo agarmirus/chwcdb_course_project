@@ -28,7 +28,7 @@ public class UnauthorizedPresenter implements IPresenter
         this.regulator = regulator;
     }
 
-    public void signIn() throws Exception
+    void signIn() throws Exception
     {
         String login = view.getAuthLogin();
 

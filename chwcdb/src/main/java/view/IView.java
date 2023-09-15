@@ -27,6 +27,7 @@ public abstract class IView extends JFrame
     public String getAuthPassword() { return null; }
 
 	public void addGameMovesTableRow(Object[] row) {}
+    public void clearGameMovesTable() {}
 
 	public Integer getGameId() { return null; }
 	public Integer getGameRound() { return null; }

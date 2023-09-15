@@ -394,6 +394,13 @@ public class BookmakerView extends IView {
 	}
 
 	@Override
+	public void clearGameMovesTable()
+	{
+		DefaultTableModel model = (DefaultTableModel)gameMovesTable.getModel();
+		model.setRowCount(0);
+	}
+
+	@Override
 	public Integer getGameId()
 	{
 		return (Integer)gameIdSpinner.getValue();
