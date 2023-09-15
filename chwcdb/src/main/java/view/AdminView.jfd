@@ -1,0 +1,288 @@
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.3" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {par l {seq l {space :p:65:p, par t {comp label9:::p::p, comp label8:::p::p, comp label4:::p::p, comp label3:::p::p, comp label2:::p::p, comp label1:::p::p}, space :::p, par l:::p {comp gameIdSpinner::::89:x, comp roundSpinner::::89:x, comp numberSpinner::::89:x, comp dateField::l::89:x, comp durationSpinner::::89:x, comp resultBox::l::89:x}}, seq l {space :p:90:p, par l:::p {comp gameInfoButton:::p:117:p, comp removeGameButton::l:::x, comp signOutButton::l:p:117:p}}, seq t {space :::p, par t {comp label7:::p::p, comp label6:::p::p}, space :::p, par l:::p {comp firstPlayerIdSpinner::::89:x, comp secondPlayerIdSpinner::::89:x}}}, par l {seq {space s:::p, comp scrollPane1:::p:427:p, space :p:47:p, par l {seq l {par t {comp label11:::p::p, comp label12:::p::p, comp label13:::p::p, comp label14:::p::p, comp label15:::p::p, comp label16:::p::p, comp label17:::p::p}, space :::p, par l {comp playerRaitingSpinner::l:p:89:p, seq {par l {comp playerSecondNameField::l:p:89:p, comp playerThirdNameField::l:p:89:p, comp playerBirthDateField::l:p:89:p, comp playerCountryField::l:p:89:p, comp playerFirstNameField::l:p:89:p, comp playerIdSpinner::l:p:89:p}, space :p:34:p, par l {seq l {space :34:34:p, comp label23:::p::p, space :6:6:p, comp refereeCountryField:::p:89:p}, seq l {par l {seq {par l {seq l {space :23:23:p, comp label22:::p::p, space :6:6:p, comp refereeBirthDateField:::p:89:p}, seq l {space :18:18:p, comp label19:::p::p, space :6:6:p, comp refereeFirstNameField:::p:89:p}, seq l {space :p:22:p, comp label18:::p::p, space :::p, comp refereeIdSpinner:::p:89:p}, seq l {comp label20:::p::p, space :6:6:p, comp refereeSecondNameField:::p:89:p}, seq l {space :13:13:p, comp label21:::p::p, space :6:6:p, comp refereeThirdNameField:::p:89:p}}, space :p:67:p, par t {comp label24:::p::p, comp label25:::p::p, comp label26:::p::p}, space :::p}, seq t {comp label27:::p::p, space :::p, comp testResultField:::p:120:p, space :p:4:p}}, par l:::p {comp userLoginField:::::x, comp userPasswordField:::::x, comp userRoleBox::l:p:89:p, comp testButton::t:::x}}}}}}, seq l {space :p:54:p, par l:::p {comp removePlayerButton:::::x, comp addPlayerButton:::p:119:p}, space :p:88:p, par l:::p {comp removeRefereeButton:::::x, comp addRefereeButton:::::x}, space :p:97:p, par l:::p {comp addUserButton::::127:x, comp removeUserButton::::127:x}}}}, seq l {space :p:92:p, comp label10:::p::p, space :::p, comp betIdSpinner:::p:89:p, space :::p, comp removeBetButton:::p:117:p}}, space ::34:x}}"
+			"$verticalGroup": "par l {seq l {space :37:37:p, par l {seq l {space :0:0:x, par l {seq {par b {comp label11::b:p::p, comp playerIdSpinner::b:p::p}, space :::p, par b {comp label12::b:p::p, comp playerFirstNameField::b:p::p}, space :::p, par b {comp label13::b:p::p, comp playerSecondNameField::b:p::p}, space :::p, par b {comp label14::b:p::p, comp playerThirdNameField::b:p::p}, space :::p, par b {comp label15::b:p::p, comp playerBirthDateField::b:p::p}, space :::p, par b {comp label16::b:p::p, comp playerCountryField::b:p::p}}, seq {par b {comp refereeIdSpinner::b:p::p, comp label18::b:p::p}, space :6:6:p, par l {seq l {space :3:3:p, comp label19:::p::p}, comp refereeFirstNameField:::p::p}, space :p:6:p, par l {seq {par l {seq l {space :3:3:p, comp label20:::p::p}, comp refereeSecondNameField:::p::p}, space :6:6:p, par l {seq l {space :3:3:p, comp label21:::p::p}, comp refereeThirdNameField:::p::p}, space :6:6:p, par l {seq l {space :3:3:p, comp label22:::p::p}, comp refereeBirthDateField:::p::p}}, seq {par b {comp label24::b:p::p, comp userLoginField::b:p::p}, space :::p, par b {comp label25::b:p::p, comp userPasswordField::b:p::p}, space :::p, par b {comp label26::b:p::p, comp userRoleBox::b:p::p}}}, space :::p, par l {seq l {space :3:3:p, comp label23:::p::p}, comp refereeCountryField:::p::p}}}, space :::p, par t {seq {par l {comp label17:::p::p, comp playerRaitingSpinner:::p::p}, space u:::p, comp addPlayerButton:::p::p, space :::p, comp removePlayerButton:::p::p}, par l:t {seq {comp addUserButton:::p::p, space :::p, comp removeUserButton:::p::p}, seq {comp addRefereeButton:::p::p, space :::p, comp removeRefereeButton:::p::p}}}, space :p:110:p}, seq {par l {seq {par b {comp label1::b:p::p, comp gameIdSpinner::b:p::p}, space :::p, par b {comp label2::b:p::p, comp roundSpinner::b:p::p}, space :::p, par b {comp label3::b:p::p, comp numberSpinner::b:p::p}, space :::p, par b {comp label4::b:p::p, comp dateField::b:p::p}, space :::p, par b {comp label6::b:p::p, comp firstPlayerIdSpinner::b:p::p}, space :::p, par b {comp label7::b:p::p, comp secondPlayerIdSpinner::b:p::p}, space :p:43:p, par b {comp label8::b:p::p, comp durationSpinner::b:p::p}, space :::p, par b {comp label9::b:p::p, comp resultBox::b:p::p}, space :p:32:p, comp removeGameButton:::p::p, space :::p, comp gameInfoButton:::p::p}, comp scrollPane1:::p:405:p}, space s:::p, par b {comp signOutButton::b:p::p, comp label10::b:p::p, comp betIdSpinner::b:p::p, comp removeBetButton::b:p::p, comp testButton::b:p::p, comp label27::b:p::p, comp testResultField::b:p::p}, space ::23:x}}}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Game ID:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Round:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Number:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "Date:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label6"
+				"text": "1st Player ID:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label7"
+				"text": "2st Player ID:"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "gameIdSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "roundSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "numberSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "dateField"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "firstPlayerIdSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "secondPlayerIdSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label8"
+				"text": "Duration:"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "durationSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label9"
+				"text": "Result:"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "resultBox"
+				"model": new javax.swing.DefaultComboBoxModel {
+					selectedItem: "Draw"
+					addElement( "Draw" )
+					addElement( "First Won" )
+					addElement( "Second Won" )
+				}
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "removeGameButton"
+				"text": "Remove Game"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "gameInfoButton"
+				"text": "Get Game Info"
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "gameMovesTable"
+					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+						add( "№" )
+						add( "Figure" )
+						add( "Start Cell" )
+						add( "End Cell" )
+						add( "Comment" )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( null )
+						add( null )
+						add( null )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( null )
+						add( null )
+						add( false )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( null )
+						add( null )
+						add( null )
+					} )
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "signOutButton"
+				"text": "Sign Out"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label10"
+				"text": "Bet ID:"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "betIdSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "removeBetButton"
+				"text": "Remove Bet"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label11"
+				"text": "Player ID:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label12"
+				"text": "First Name:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label13"
+				"text": "Second Name:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label14"
+				"text": "Third Name:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label15"
+				"text": "Birth Date:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label16"
+				"text": "Country:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label17"
+				"text": "Raiting:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "playerFirstNameField"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "playerSecondNameField"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "playerThirdNameField"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "playerBirthDateField"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "playerCountryField"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "playerRaitingSpinner"
+				"model": new javax.swing.SpinnerNumberModel {
+					minimum: 0
+				}
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "playerIdSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "addPlayerButton"
+				"text": "Add Player"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "removePlayerButton"
+				"text": "Remove Player"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label18"
+				"text": "Referee ID:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label19"
+				"text": "First Name:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "refereeFirstNameField"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "refereeSecondNameField"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label20"
+				"text": "Second Name:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label21"
+				"text": "Third Name:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "refereeThirdNameField"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "refereeBirthDateField"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label22"
+				"text": "Birth Date:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label23"
+				"text": "Country:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "refereeCountryField"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "refereeIdSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "addRefereeButton"
+				"text": "Add Referee"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "removeRefereeButton"
+				"text": "Remove Referee"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label24"
+				"text": "User Login:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label25"
+				"text": "Password:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label26"
+				"text": "Role:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "userLoginField"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "userPasswordField"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "userRoleBox"
+				"model": new javax.swing.DefaultComboBoxModel {
+					selectedItem: "Admin"
+					addElement( "Admin" )
+					addElement( "Spectator" )
+					addElement( "Bookmaker" )
+				}
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "addUserButton"
+				"text": "Add User"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "removeUserButton"
+				"text": "Remove User"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "testButton"
+				"text": "Test"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label27"
+				"text": "Result:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "testResultField"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 5, 10 )
+			"size": new java.awt.Dimension( 1370, 545 )
+		} )
+	}
+}

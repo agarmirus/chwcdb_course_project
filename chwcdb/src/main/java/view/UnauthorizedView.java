@@ -71,6 +71,8 @@ public class UnauthorizedView extends IView {
 		);
 		pack();
 		setLocationRelativeTo(getOwner());
+
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 
 	private JLabel label1;

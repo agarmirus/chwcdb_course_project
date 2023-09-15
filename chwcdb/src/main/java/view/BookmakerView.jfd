@@ -1,0 +1,195 @@
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.3" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {par l {seq {space :p:44:p, par t {comp label9:::p::p, comp label8:::p::p, comp label7:::p::p, comp label6:::p::p, comp label5:::p::p, comp label4:::p::p, comp label3:::p::p, comp label2:::p::p, comp label1:::p::p}, space :::p, par l:::p {comp gameIdSpinner::::89:x, comp roundSpinner::::89:x, comp numberSpinner::::89:x, comp dateField::l::89:x, comp refereeIdSpinner::::89:x, comp firstPlayerIdSpinner::::89:x, comp secondPlayerIdSpinner::::89:x, comp durationSpinner::::89:x, comp resultBox::l::89:x}, space s:::p}, seq t {space :::p, par l {comp signOutButton:::p:117:p, comp gameInfoButton:::p:117:p}, space :p:26:p}}, par l {seq {space ::480:x, comp label16:::p::p, space :::p, comp betStatusBox:::p:105:p, space :::p, comp setBetStatusButton:::p:117:p, space :p:26:p}, seq l {par l {comp scrollPane1::l:p:427:p, seq l {space :p:131:p, par l {comp gameInfoButton4:::p:117:p, comp gameInfoButton2:::p:117:p}}}, space ::77:x, par l {seq t {par t {comp label10::t:p::p, comp label11::t:p::p, comp label12::t:p::p, comp label13::t:p::p}, space :::p, par l:::p {comp coefSpinner:::::x, comp betTypeBox:::::x, comp betIdSpinner:::::x, comp conditionField:::::x}}, seq t {comp label15:::p::p, space :::p, comp enclBetsIdField:::p:105:p}}, space :p:77:p}}}}"
+			"$verticalGroup": "par l {seq {par l {seq l {par l {seq {space :p:192:p, comp gameInfoButton2:::p::p, space :::p, comp gameInfoButton4:::p::p, space :p:59:p}, seq t {space :::p, par b {comp label10::b:p::p, comp betIdSpinner::b:p::p}, space :::p, par b {comp label11::b:p::p, comp betTypeBox::b:p::p}, space :::p, par b {comp label12::b:p::p, comp conditionField::b:p::p}, space :::p, par b {comp coefSpinner::b:p::p, comp label13::b:p::p}, space :::p, par b {comp label15::b:p::p, comp enclBetsIdField::b:p::p}, space :p:63:p}}, par b {comp label16::b:p::p, comp betStatusBox::b:p::p, comp setBetStatusButton::b:p::p}}, seq l {space :p:40:p, par l {comp scrollPane1::l:p:446:p, seq l {par b {comp label1::b:p::p, comp gameIdSpinner::b:p::p}, space :::p, par b {comp label2::b:p::p, comp roundSpinner::b:p::p}, space :::p, par b {comp label3::b:p::p, comp numberSpinner::b:p::p}, space :::p, par b {comp label4::b:p::p, comp dateField::b:p::p}, space :::p, par b {comp label5::b:p::p, comp refereeIdSpinner::b:p::p}, space :::p, par b {comp label6::b:p::p, comp firstPlayerIdSpinner::b:p::p}, space :::p, par b {comp label7::b:p::p, comp secondPlayerIdSpinner::b:p::p}, space s:::p, par b {comp label8::b:p::p, comp durationSpinner::b:p::p}, space :::p, par b {comp label9::b:p::p, comp resultBox::b:p::p}, space s:::p, comp gameInfoButton:::p::p, space :p:93:p, comp signOutButton:::p::p}}}}, space ::32:x}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Game ID:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Round:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Number:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "Date:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": "Referee ID:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label6"
+				"text": "1st Player ID:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label7"
+				"text": "2st Player ID:"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "gameIdSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "roundSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "numberSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "dateField"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "refereeIdSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "firstPlayerIdSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "secondPlayerIdSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label8"
+				"text": "Duration:"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "durationSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label9"
+				"text": "Result:"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "resultBox"
+				"model": new javax.swing.DefaultComboBoxModel {
+					selectedItem: "Draw"
+					addElement( "Draw" )
+					addElement( "First Won" )
+					addElement( "Second Won" )
+				}
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "gameInfoButton"
+				"text": "Get Game Info"
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "gameMovesTable"
+					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+						add( "№" )
+						add( "Figure" )
+						add( "Start Cell" )
+						add( "End Cell" )
+						add( "Comment" )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( null )
+						add( null )
+						add( null )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( null )
+						add( null )
+						add( false )
+					}, new java.util.Vector {
+						add( null )
+						add( null )
+						add( null )
+						add( null )
+						add( null )
+					} )
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label10"
+				"text": "Bet ID:"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "betIdSpinner"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label11"
+				"text": "Bet Type:"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "betTypeBox"
+				"model": new javax.swing.DefaultComboBoxModel {
+					selectedItem: "Elementary"
+					addElement( "Elementary" )
+					addElement( "Express" )
+					addElement( "System" )
+				}
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label12"
+				"text": "Condition:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "conditionField"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "coefSpinner"
+				"model": new javax.swing.SpinnerNumberModel {
+					minimum: 1.0
+					stepSize: 0.01
+					value: 1.0
+				}
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label13"
+				"text": "Coefficient:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label15"
+				"text": "Enclosure Bets IDs:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "enclBetsIdField"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "gameInfoButton2"
+				"text": "Add Bet"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label16"
+				"text": "Bet Status:"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "betStatusBox"
+				"model": new javax.swing.DefaultComboBoxModel {
+					selectedItem: "None"
+					addElement( "None" )
+					addElement( "Success" )
+					addElement( "Fail" )
+				}
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "setBetStatusButton"
+				"text": "Set Bet Status"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "gameInfoButton4"
+				"text": "Remove Bet"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "signOutButton"
+				"text": "Sign Out"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 235, 75 )
+			"size": new java.awt.Dimension( 1040, 555 )
+		} )
+	}
+}
