@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.json.JSONObject;
 import org.redisson.api.RQueue;
+import org.redisson.api.RedissonClient;
 
 import dao.IDAO;
 import entity.Bet;
@@ -83,12 +84,12 @@ public class BookmakerModel extends IModel
     public BookmakerModel(
         final IDAO<GameMove> gameMoveDAO,
         final IDAO<Bet> betDAO,
-        final RQueue<String> taskQueue
+        final RedissonClient client
     )
     {
         this.gameMoveDAO = gameMoveDAO;
         this.betDAO = betDAO;
-        this.taskQueue = taskQueue;
+        this.taskQueue = client.getQueue("taskqueue");
     }
 
     @Override

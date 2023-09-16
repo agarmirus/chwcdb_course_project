@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.json.JSONObject;
 import org.redisson.api.RQueue;
+import org.redisson.api.RedissonClient;
 
 import javafx.util.Pair;
 
@@ -28,12 +29,12 @@ public class SpectatorModel extends IModel
     public SpectatorModel(
         final IDAO<Game> gameDAO,
         final IDAO<GameMove> gameMoveDAO,
-        final RQueue<String> taskQueue
+        final RedissonClient client
     )
     {
         this.gameDAO = gameDAO;
         this.gameMoveDAO = gameMoveDAO;
-        this.taskQueue = taskQueue;
+        this.taskQueue = client.getQueue("taskqueue");
     }
 
     @Override

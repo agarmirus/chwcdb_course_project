@@ -17,7 +17,7 @@ public class PostgresUserDAO implements IDAO<User>
 {
     private Connection connection;
 
-    private Optional<User> getOneOptBook(ResultSet resultSet) throws SQLException
+    protected Optional<User> getOneOptUser(ResultSet resultSet) throws SQLException
     {
         User user = null;
 
@@ -76,7 +76,7 @@ public class PostgresUserDAO implements IDAO<User>
             Statement statement = connection.createStatement();
             ResultSet queryResult = statement.executeQuery(query);
 
-            var result = getOneOptBook(queryResult);
+            var result = getOneOptUser(queryResult);
 
             return result;
         }

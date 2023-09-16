@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.json.JSONObject;
 import org.redisson.api.RQueue;
+import org.redisson.api.RedissonClient;
 
 import dao.IDAO;
 import entity.Bet;
@@ -36,7 +37,7 @@ public class AdminModel extends IModel
         final IDAO<Player> playerDAO,
         final IDAO<User> userDAO,
         final IDAO<Referee> refereeDAO,
-        final RQueue<String> taskQueue
+        final RedissonClient client
     )
     {
         this.gameDAO = gameDAO;
@@ -45,7 +46,7 @@ public class AdminModel extends IModel
         this.playerDAO = playerDAO;
         this.userDAO = userDAO;
         this.refereeDAO = refereeDAO;
-        this.taskQueue = taskQueue;
+        this.taskQueue = client.getQueue("taskqueue");
     }
 
     @Override
