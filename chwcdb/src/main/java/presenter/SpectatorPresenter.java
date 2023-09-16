@@ -279,7 +279,7 @@ public class SpectatorPresenter implements IPresenter
 
         model.runTaskQueue();
 
-        view.showInfoDialog("Move has been removed");
+        view.showInfoDialog("Moves have been added");
     }
 
     void signOut() throws Exception

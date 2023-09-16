@@ -76,7 +76,7 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
 
             String query = String.format(
                 "select game_id, round, duration, number, m.number as move_number, result, date, referee_id, first_player_id, second_player_id, move_id, figure, start_cell, end_cell, comment " +
-                "from (select game_id, m.id as move_id, figure, start_cell, end_cell, comment from game_moves gm join moves m on gm.id = m.game_id where %s = %d) " +
+                "from (select game_id, move_id, number, comment from game_moves gm join moves m on gm.id = m.game_id where %s = %d) " +
                 "join games g on game_id = g.id " +
                 "order by move_number;",
                 attributeName,
@@ -152,58 +152,57 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
 
             Statement statement = connection.createStatement();
 
-            String movesQuery = "";
-            String gameMovesQuery = "";
-
             for (var entity: entities)
             {
                 Move move = entity.getMove();
                 Game game = entity.getGame();
 
-                ResultSet resultSet = statement.executeQuery(
-                    String.format("select * from moves where id = %d;", move.getId())
+                statement.executeQuery(
+                    String.format(
+                        "delete from game_moves where game_id = %d;",
+                        game.getId()
+                    )
                 );
+
+                ResultSet resultSet = statement.executeQuery(
+                    String.format(
+                        "select * from moves where figure = %d and start_cell = '%s' and end_cell = '%s';",
+                        move.getFigure().ordinal(),
+                        move.getStartCell(),
+                        move.getEndCell()
+                    )
+                );
+
+                Integer moveId = 0;
 
                 if (!resultSet.next())
                 {
-                    if (movesQuery.isEmpty())
-                        movesQuery = String.format(
+                    ResultSet moveResultSet = statement.executeQuery(
+                        String.format(
                             "insert into moves values (%d, '%s', '%s')",
                             move.getFigure().ordinal(),
                             move.getStartCell(),
                             move.getEndCell()
-                        );
-                    else
-                        movesQuery += String.format(
-                            ", (%d, '%s', '%s')",
-                            move.getFigure().ordinal(),
-                            move.getStartCell(),
-                            move.getEndCell()
-                        );
-                }
+                        )
+                    );
 
-                if (gameMovesQuery.isEmpty())
-                    gameMovesQuery = String.format(
+                    moveResultSet.next();
+
+                    moveId = moveResultSet.getInt("id");
+                }
+                else
+                    moveId = resultSet.getInt("id");
+
+                statement.executeQuery(
+                    String.format(
                         "insert into game_moves values (%d, %d, %d, '%s')",
                         game.getId(),
-                        move.getId(),
+                        moveId,
                         entity.getNumber(),
                         entity.getComment()
-                    );
-                else
-                    gameMovesQuery += String.format(
-                        ", (%d, %d, %d, '%s')",
-                        game.getId(),
-                        move.getId(),
-                        entity.getNumber(),
-                        entity.getComment()
-                    );
+                    )
+                );
             }
-
-            if (movesQuery.isEmpty())
-                statement.executeQuery(gameMovesQuery + ";");
-            else
-                statement.executeQuery("begin;" + movesQuery + ";" + gameMovesQuery + ";commit;");
         }
         catch (SQLException e)
         {
