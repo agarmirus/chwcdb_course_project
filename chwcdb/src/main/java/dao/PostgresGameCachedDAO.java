@@ -100,7 +100,7 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
             {
                 try
                 {
-                    PreparedStatement preparedStatement = connection.prepareStatement("insert into games values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    PreparedStatement preparedStatement = connection.prepareStatement("insert into games values (?, ?, ?, ?, ?, ?, ?, ?, ?) on conflict (id) update result = ?, duration = ?");
 
                     for (var entry: map.entrySet())
                     {
@@ -117,6 +117,8 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
                         preparedStatement.setInt(6, jsonObject.getInt("refereeId"));
                         preparedStatement.setInt(7, jsonObject.getInt("firstPlayerId"));
                         preparedStatement.setInt(8, jsonObject.getInt("secondPlayerId"));
+                        preparedStatement.setInt(9, jsonObject.getInt("result"));
+                        preparedStatement.setInt(10, jsonObject.getInt("duration"));
 
                         preparedStatement.addBatch();
                     }
@@ -201,7 +203,7 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
 
             JSONObject jsonObject = new JSONObject(value);
 
-            var user = new Game(
+            var game = new Game(
                 jsonObject.getInt("id"),
                 jsonObject.getInt("round"),
                 jsonObject.getInt("duration"),
@@ -213,7 +215,7 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
                 jsonObject.getInt("secondPlayerId")
             );
 
-            return Optional.of(user);
+            return Optional.of(game);
         }
         catch (Exception e)
         {
@@ -315,9 +317,42 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
     @Override
     public void update(final Game entity, List<Pair<String, String>> updates) throws CHWCDBException
     {
-        throw new CHWCDBDataAccessException(
-            "PostgresGameCachedDAO.update(Game, List<Pair<String, String>>): method is not implemented"
-        );
+        try
+        {
+            if (connection.isClosed() || !connection.isValid(0))
+            {
+                throw new CHWCDBDataAccessException(
+                    "PostgresGameCachedDAO.create(Game): no connection to data base"
+                );
+            }
+
+            String key = String.format("game:%d", entity.getId());
+
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("round", entity.getRound());
+            jsonObject.put("duration", entity.getDuration());
+            jsonObject.put("number", entity.getNumber());
+            jsonObject.put("result", entity.getResult().ordinal());
+            jsonObject.put("date", new SimpleDateFormat("yyyy-MM-dd").format(entity.getDate()));
+            jsonObject.put("refereeId", entity.getRefereeId());
+            jsonObject.put("firstPlayerId", entity.getFirstPlayerId());
+            jsonObject.put("secondPlayerId", entity.getSecondPlayerId());
+
+            for (var update: updates)
+                jsonObject.put(update.getKey(), update.getValue());
+
+            cache.put(key, jsonObject.toString());
+        }
+        catch (SQLException e)
+        {
+            throw new CHWCDBDataAccessException(
+                String.format(
+                    "PostgresGameCachedDAO.create(Game): %s",
+                    e.getMessage()
+                )
+            );
+        }
     }
 
     @Override
@@ -340,7 +375,7 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
                 );
             }
 
-            String key = String.format("game:%s", entity.getId());
+            String key = String.format("game:%d", entity.getId());
 
             cache.remove(key);
         }
