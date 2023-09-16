@@ -200,7 +200,6 @@ public class PostgresBetCachedDAO extends PostgresBetDAO
             
             var jsonObject = new JSONObject();
 
-            jsonObject.put("id", entity.getId());
             jsonObject.put("type", entity.getType().ordinal());
             jsonObject.put("status", entity.getStatus().ordinal());
 
@@ -274,7 +273,6 @@ public class PostgresBetCachedDAO extends PostgresBetDAO
 
             var jsonObject = new JSONObject();
 
-            jsonObject.put("id", entity.getId());
             jsonObject.put("status", entity.getStatus().ordinal());
 
             String key = String.format("bet:%d", entity.getId());

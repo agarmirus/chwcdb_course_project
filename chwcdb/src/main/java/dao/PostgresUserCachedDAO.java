@@ -74,7 +74,6 @@ public class PostgresUserCachedDAO extends PostgresUserDAO
 
                     var jsonObject = new JSONObject();
 
-                    jsonObject.put("login", result.getLogin());
                     jsonObject.put("role", result.getRole().name());
 
                     return jsonObject.toString();

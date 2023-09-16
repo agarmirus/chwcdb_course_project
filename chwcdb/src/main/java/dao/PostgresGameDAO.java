@@ -20,7 +20,7 @@ public class PostgresGameDAO implements IDAO<Game>
 {
     private Connection connection;
 
-    private Optional<Game> getOneOptGame(ResultSet resultSet) throws SQLException
+    protected Optional<Game> getOneOptGame(ResultSet resultSet) throws SQLException
     {
         Game game = null;
 
