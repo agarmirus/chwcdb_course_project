@@ -26,11 +26,11 @@ public class PostgresBetDAO implements IDAO<Bet>
         connection = DriverManager.getConnection(url, bet, pswd);
     }
 
-    public void setConnection(String url, String bet, String pswd) throws CHWCDBException
+    public void setConnection(String url, String user, String pswd) throws CHWCDBException
     {
         try
         {
-            connection = DriverManager.getConnection(url, bet, pswd);
+            connection = DriverManager.getConnection(url, user, pswd);
         }
         catch (SQLException e)
         {

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import org.json.JSONObject;
 import org.redisson.api.LocalCachedMapOptions;
-import org.redisson.api.RLocalCachedMap;
+import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.redisson.api.MapOptions.WriteMode;
 import org.redisson.api.map.MapLoader;
@@ -27,7 +27,7 @@ import javafx.util.Pair;
 public class PostgresUserCachedDAO extends PostgresUserDAO
 {
     private Connection connection;
-    private RLocalCachedMap<String, String> cache;
+    private RMapCache<String, String> cache;
 
     public PostgresUserCachedDAO(
         String url,
@@ -97,9 +97,10 @@ public class PostgresUserCachedDAO extends PostgresUserDAO
 
                     for (var entry: map.entrySet())
                     {
+                        var login = entry.getKey().split(":")[1];
                         var jsonObject = new JSONObject(entry.getValue());
 
-                        preparedStatement.setString(1, jsonObject.getString("login"));
+                        preparedStatement.setString(1, login);
                         preparedStatement.setString(2, jsonObject.getString("hashedPswd"));
                         preparedStatement.setInt(3, jsonObject.getInt("role"));
 
@@ -124,7 +125,9 @@ public class PostgresUserCachedDAO extends PostgresUserDAO
 
                     for (var key: keys)
                     {
-                        preparedStatement.setString(1, key);
+                        String login = key.split(":")[1];
+                        
+                        preparedStatement.setString(1, login);
                         preparedStatement.addBatch();
                     }
 
@@ -142,7 +145,7 @@ public class PostgresUserCachedDAO extends PostgresUserDAO
                         .writer(mapWriter)
                         .writeMode(WriteMode.WRITE_THROUGH)
                         .loader(mapLoader);
-        cache = client.getLocalCachedMap("cache", options);
+        cache = client.getMapCache("cache", options);
     }
 
     @Override
