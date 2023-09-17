@@ -332,7 +332,4 @@ public class AdminModelLogDecorator extends IModel
             throw e;
         }
     }
-
-    @Override
-    public void runTest() {}
 }

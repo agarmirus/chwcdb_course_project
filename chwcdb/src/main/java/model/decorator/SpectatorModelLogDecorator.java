@@ -8,12 +8,12 @@ import entity.*;
 import logger.ILogger;
 import model.*;
 
-public class BookmakerModelLogDecorator extends IModel
+public class SpectatorModelLogDecorator extends IModel
 {
     private IModel model;
     private ILogger logger;
 
-    public BookmakerModelLogDecorator(
+    public SpectatorModelLogDecorator(
         final IModel model,
         final ILogger logger
     )
@@ -21,7 +21,7 @@ public class BookmakerModelLogDecorator extends IModel
         this.model = model;
         this.logger = logger;
         
-        logger.setClass(BookmakerModel.class);
+        logger.setClass(SpectatorModel.class);
     }
 
     @Override
