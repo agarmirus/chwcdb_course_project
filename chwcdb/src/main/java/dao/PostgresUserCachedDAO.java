@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 import org.redisson.api.LocalCachedMapOptions;
@@ -28,12 +29,14 @@ public class PostgresUserCachedDAO extends PostgresUserDAO
 {
     private Connection connection;
     private RMapCache<String, String> cache;
+    private long ttl;
 
     public PostgresUserCachedDAO(
         String url,
         String user,
         String pswd,
-        final RedissonClient client
+        final RedissonClient client,
+        final long ttl
     ) throws Exception
     {
         super(url, user, pswd);
@@ -145,6 +148,8 @@ public class PostgresUserCachedDAO extends PostgresUserDAO
                         .writeMode(WriteMode.WRITE_THROUGH)
                         .loader(mapLoader);
         cache = client.getMapCache("cache", options);
+
+        this.ttl = ttl;
     }
 
     @Override
@@ -241,7 +246,7 @@ public class PostgresUserCachedDAO extends PostgresUserDAO
             jsonObject.put("hashedPswd", entity.getHashedPassword());
             jsonObject.put("role", entity.getRole().ordinal());
 
-            cache.put(key, jsonObject.toString());
+            cache.put(key, jsonObject.toString(), ttl, TimeUnit.MILLISECONDS);
         }
         catch (SQLException e)
         {

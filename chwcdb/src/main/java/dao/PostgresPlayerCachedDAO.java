@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 import org.redisson.api.LocalCachedMapOptions;
@@ -25,12 +26,14 @@ public class PostgresPlayerCachedDAO extends PostgresPlayerDAO
 {
     private Connection connection;
     private RMapCache<String, String> cache;
+    private long ttl;
 
     public PostgresPlayerCachedDAO(
         String url,
         String user,
         String pswd,
-        final RedissonClient client
+        final RedissonClient client,
+        final long ttl
     ) throws Exception
     {
         super(url, user, pswd);
@@ -101,6 +104,8 @@ public class PostgresPlayerCachedDAO extends PostgresPlayerDAO
                         .writer(mapWriter)
                         .writeMode(WriteMode.WRITE_THROUGH);
         cache = client.getMapCache("cache", options);
+
+        this.ttl = ttl;
     }
 
     @Override
@@ -204,7 +209,7 @@ public class PostgresPlayerCachedDAO extends PostgresPlayerDAO
             jsonObject.put("country", entity.getCountry());
             jsonObject.put("raiting", entity.getRaiting());
 
-            cache.put(key, jsonObject.toString());
+            cache.put(key, jsonObject.toString(), ttl, TimeUnit.MILLISECONDS);
         }
         catch (SQLException e)
         {

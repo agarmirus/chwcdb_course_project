@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 import org.redisson.api.LocalCachedMapOptions;
@@ -33,12 +34,14 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
 {
     private Connection connection;
     private RMapCache<String, String> cache;
+    final long ttl;
 
     public PostgresGameMoveCachedDAO(
         String url,
         String user,
         String pswd,
-        final RedissonClient client
+        final RedissonClient client,
+        final long ttl
     ) throws Exception
     {
         super(url, user, pswd);
@@ -210,6 +213,8 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
                         .writeMode(WriteMode.WRITE_THROUGH)
                         .loader(mapLoader);
         cache = client.getMapCache("cache", options);
+        
+        this.ttl = ttl;
     }
 
     public void setConnection(String url, String referee, String pswd) throws CHWCDBException
@@ -352,7 +357,7 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
 
                 String key = String.format("gameMove:%d:%d", game.getId(), move.getId());
 
-                cache.put(key, jsonObject.toString());
+                cache.put(key, jsonObject.toString(), ttl, TimeUnit.MILLISECONDS);
             }
         }
         catch (SQLException e)

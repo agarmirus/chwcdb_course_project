@@ -3,7 +3,6 @@ package logger;
 import java.util.concurrent.TimeUnit;
 
 import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Point;
 
 import logger.level.LogLevel;
@@ -15,14 +14,12 @@ public class InfluxLogger implements ILogger
     private Class<?> clazz;
 
     public InfluxLogger(
-        String url,
-        String user,
-        String pswd,
+        final InfluxDB influxDB,
         final Integer batchSize,
         final Integer batchDuration
     )
     {
-        influxDB = InfluxDBFactory.connect(url, user, pswd);
+        this.influxDB = influxDB;
 
         influxDB.setRetentionPolicy("defaultPolicy");
         influxDB.setDatabase("logs");

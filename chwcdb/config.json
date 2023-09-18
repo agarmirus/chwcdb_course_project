@@ -1,0 +1,8 @@
+{
+    "conn": "",
+    "redisConn": "",
+    "influxConn": "",
+    "logLevel": "all",
+    "cached": true,
+    "ttl": 5000
+}

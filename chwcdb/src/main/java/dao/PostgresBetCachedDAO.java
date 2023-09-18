@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,12 +28,14 @@ public class PostgresBetCachedDAO extends PostgresBetDAO
 {
     private Connection connection;
     private RMapCache<String, String> cache;
+    private long ttl;
 
     public PostgresBetCachedDAO(
         String url,
         String user,
         String pswd,
-        final RedissonClient client
+        final RedissonClient client,
+        final long ttl
     ) throws Exception
     {
         super(url, user, pswd);
@@ -146,6 +149,8 @@ public class PostgresBetCachedDAO extends PostgresBetDAO
                         .writer(mapWriter)
                         .writeMode(WriteMode.WRITE_THROUGH);
         cache = client.getMapCache("cache", options);
+
+        this.ttl = ttl;
     }
 
     public void setConnection(String url, String user, String pswd) throws CHWCDBException
@@ -226,7 +231,7 @@ public class PostgresBetCachedDAO extends PostgresBetDAO
 
             String key = String.format("bet:%d", entity.getId());
 
-            cache.put(key, jsonObject.toString());
+            cache.put(key, jsonObject.toString(), ttl, TimeUnit.MILLISECONDS);
         }
         catch (SQLException e)
         {

@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 import org.redisson.api.LocalCachedMapOptions;
@@ -29,12 +30,14 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
 {
     private Connection connection;
     private RMapCache<String, String> cache;
+    private long ttl;
 
     public PostgresGameCachedDAO(
         String url,
         String user,
         String pswd,
-        final RedissonClient client
+        final RedissonClient client,
+        final long ttl
     ) throws Exception
     {
         super(url, user, pswd);
@@ -162,6 +165,8 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
                         .writeMode(WriteMode.WRITE_THROUGH)
                         .loader(mapLoader);
         cache = client.getMapCache("cache", options);
+
+        this.ttl = ttl;
     }
 
     @Override
@@ -269,7 +274,7 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
             jsonObject.put("firstPlayerId", entity.getFirstPlayerId());
             jsonObject.put("secondPlayerId", entity.getSecondPlayerId());
 
-            cache.put(key, jsonObject.toString());
+            cache.put(key, jsonObject.toString(), ttl, TimeUnit.MILLISECONDS);
         }
         catch (SQLException e)
         {
@@ -342,7 +347,7 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
             for (var update: updates)
                 jsonObject.put(update.getKey(), update.getValue());
 
-            cache.put(key, jsonObject.toString());
+            cache.put(key, jsonObject.toString(), ttl, TimeUnit.MILLISECONDS);
         }
         catch (SQLException e)
         {
