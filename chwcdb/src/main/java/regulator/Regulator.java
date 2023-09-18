@@ -5,7 +5,7 @@ import org.redisson.api.RedissonClient;
 
 import dao.*;
 import entity.enums.*;
-import logger.InfluxLogger;
+import logger.ILogger;
 import presenter.*;
 import view.*;
 import view.decorator.*;
@@ -16,24 +16,25 @@ public class Regulator implements IRegulator
 {
     private IPresenter presenter;
     private RedissonClient client;
-    private InfluxDB influx;
     private String connStr;
     private boolean cached;
     private long ttl;
+    private ILogger logger;
 
     public Regulator(
         String connStr,
         final RedissonClient client,
         final InfluxDB influx,
         final boolean cached,
-        final long ttls
+        final long ttl,
+        final ILogger logger
     )
     {
         this.client = client;
         this.connStr = connStr;
         this.cached = cached;
         this.ttl = ttl;
-        this.influx = influx;
+        this.logger = logger;
     }
 
     public void changeUser() throws Exception
@@ -43,17 +44,17 @@ public class Regulator implements IRegulator
         if (cached)
             model = new UnauthorizedModelLogDecorator(
                 new UnauthorizedModel(new PostgresUserCachedDAO(connStr, "unauthorized", "unauthorized", client, ttl)),
-                new InfluxLogger(influx, 100, 200)
+                logger
             );
         else
             model = new UnauthorizedModelLogDecorator(
                 new UnauthorizedModel(new PostgresUserDAO(connStr, "unauthorized", "unauthorized")),
-                new InfluxLogger(influx, 100, 200)
+                logger
             );
 
         IView view = new UnauthorizedViewLogDecorator(
             new UnauthorizedView(),
-            new InfluxLogger(influx, 100, 200)
+            logger
         );
 
         presenter = new UnauthorizedPresenter(model, view, this);
@@ -72,7 +73,7 @@ public class Regulator implements IRegulator
                         new PostgresGameMoveCachedDAO(connStr, "spectator", "spectator", client, ttl),
                         client
                     ),
-                    new InfluxLogger(influx, 100, 200)
+                    logger
                 );
             else
                 model = new SpectatorModelLogDecorator(
@@ -81,12 +82,12 @@ public class Regulator implements IRegulator
                         new PostgresGameMoveDAO(connStr, "spectator", "spectator"),
                         client
                     ),
-                    new InfluxLogger(influx, 100, 200)
+                    logger
                 );
 
             IView view = new SpectatorViewLogDecorator(
                 new SpectatorView(),
-                new InfluxLogger(influx, 100, 200)
+                logger
             );
 
             presenter = new SpectatorPresenter(model, view, this, client);
@@ -102,7 +103,7 @@ public class Regulator implements IRegulator
                         new PostgresBetCachedDAO(connStr, "bookmaker", "bookmaker", client, ttl),
                         client
                     ),
-                    new InfluxLogger(influx, 100, 200)
+                    logger
                 );
             else
             {
@@ -112,13 +113,13 @@ public class Regulator implements IRegulator
                         new PostgresBetDAO(connStr, "bookmaker", "bookmaker"),
                         client
                     ),
-                    new InfluxLogger(influx, 100, 200)
+                    logger
                 );
             }
 
             IView view = new BookmakerViewLogDecorator(
                 new BookmakerView(),
-                new InfluxLogger(influx, 100, 200)
+                logger
             );
 
             presenter = new BookmakerPresenter(model, view, this, client);
@@ -138,7 +139,7 @@ public class Regulator implements IRegulator
                         new PostgresRefereeCachedDAO(connStr, "administrator", "administrator", client, ttl),
                         client
                     ),
-                    new InfluxLogger(influx, 100, 200)
+                    logger
                 );
             else
             {
@@ -152,13 +153,13 @@ public class Regulator implements IRegulator
                         new PostgresRefereeDAO(connStr, "administrator", "administrator"),
                         client
                     ),
-                    new InfluxLogger(influx, 100, 200)
+                    logger
                 );
             }
 
             IView view = new AdminViewLogDecorator(
                 new AdminView(),
-                new InfluxLogger(influx, 100, 200)
+                logger
             );
 
             presenter = new AdminPresenter(model, view, this, client);
