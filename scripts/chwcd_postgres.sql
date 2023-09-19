@@ -79,6 +79,30 @@ create table if not exists bet_enclosures
 alter table bet_enclosures add constraint bet_id check (bet_id != enclosure_id);
 alter table bet_enclosures add constraint enclosure_id check (bet_id != enclosure_id);
 
+create user unauthorized with encrypted password 'unauthorized';
+grant select on users to unauthorized;
+
+create user administrator with encrypted password 'administrator';
+grant select, update, delete, insert on bet_enclosures to administrator;
+grant select, update, delete, insert on bets to administrator;
+grant select, update, delete, insert on bet_enclosures to administrator;
+grant select, update, delete, insert on game_moves to administrator;
+grant select, update, delete, insert on games to administrator;
+grant select, update, delete, insert on moves to administrator;
+grant select, update, delete, insert on players to administrator;
+grant select, update, delete, insert on referees to administrator;
+
+create user spectator with encrypted password 'spectator';
+grant select on referees, players to spectator;
+grant select, update, delete, insert on games to spectator;
+grant select, update, delete, insert on moves to spectator;
+grant select, update, delete, insert on game_moves to spectator;
+
+create user bookmaker with encrypted password 'bookmaker';
+grant select on referees, players, games, moves, game_moves to bookmaker;
+grant select, update, delete, insert on bets to bookmaker;
+grant select, update, delete, insert on bet_enclosures to bookmaker;
+
 create or replace function is_achieved(condition text, result int) returns boolean as
 $$
 	begin

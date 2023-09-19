@@ -1,6 +1,6 @@
 {
-    "conn": "",
-    "redisConn": "",
+    "conn": "jdbc:postgresql://localhost:5432/postgres",
+    "redisConn": "redis://127.0.0.1:6379",
     "influxConn": "",
     "logLevel": "all",
     "cached": true,
