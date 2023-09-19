@@ -69,12 +69,12 @@ public class App
             String logLevelString = configJSONObject.getString("logLevel");
             String redisConnString = configJSONObject.getString("redisConn");
             String influxConnString = configJSONObject.getString("influxConn");
-            boolean cached = configJSONObject.getBoolean("cached");
+            Boolean cached = configJSONObject.getBoolean("cached");
 
             long ttl = 0;
 
             if (cached)
-                ttl = configJSONObject.getLong("cached");
+                ttl = configJSONObject.getLong("ttl");
             
             InfluxDB influx = InfluxDBFactory.connect(influxConnString, "logger", "logger");
 

@@ -42,16 +42,6 @@
       <version>1.15</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-      <version>2.20.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>2.20.0</version>
-    </dependency>
-    <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
       <version>20230618</version>
@@ -107,7 +97,7 @@
               <manifest>
                 <addClasspath>true</addClasspath>
                 <classpathPrefix>lib/</classpathPrefix>
-                <mainClass>TechApp</mainClass>
+                <mainClass>App</mainClass>
               </manifest>
             </archive>
           </configuration>
@@ -132,7 +122,7 @@
             <configuration>
                 <archive>
                     <manifest>
-                        <mainClass>TechApp</mainClass>
+                        <mainClass>App</mainClass>
                     </manifest>
                     <manifestEntries>
                       <Multi-Release>true</Multi-Release>

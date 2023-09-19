@@ -1,7 +1,7 @@
 {
     "conn": "jdbc:postgresql://localhost:5432/postgres",
-    "redisConn": "redis://127.0.0.1:6379",
-    "influxConn": "",
+    "redisConn": "redis://localhost:6379",
+    "influxConn": "https://localhost:8086",
     "logLevel": "all",
     "cached": true,
     "ttl": 5000

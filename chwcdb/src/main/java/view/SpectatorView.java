@@ -426,6 +426,7 @@ public class SpectatorView extends IView {
 	{
 		String[] movesStr = movesTextArea.getText().strip().split("\n");
 		List<GameMove> moves = new ArrayList<GameMove>();
+		int i = 0;
 
 		for (String moveStr: movesStr)
 		{
@@ -466,7 +467,7 @@ public class SpectatorView extends IView {
 			
 			Move move = new Move(0, figure, startCell, endCell);
 
-			moves.add(new GameMove(null, move, comment));
+			moves.add(new GameMove(null, move, ++i, comment));
 		}
 
 		return moves;
