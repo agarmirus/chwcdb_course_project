@@ -74,7 +74,7 @@ public class PostgresBetDAO implements IDAO<Bet>
                     "PostgresBetDAO.create(Bet): no connection to data base"
                 );
             }
-            
+
             String query = String.format(
                 "insert into bets values (%d, %d, '%s', %f, %d, %d);",
                 entity.getId(),

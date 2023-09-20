@@ -54,7 +54,7 @@ create table if not exists bets
 (
 	id int primary key,
 	type int not null check (type >= 0 and type <= 2),
-	condition text check (condition = ''),
+	condition text check (condition != ''),
 	coefficient real check (coefficient > 1),
 	status int not null check (status >= 0 and status <= 2),
 	game_id int references games (id) on delete cascade
@@ -98,6 +98,10 @@ grant select on referees, players to spectator;
 grant select, update, delete, insert on games to spectator;
 grant select, update, delete, insert on moves to spectator;
 grant select, update, delete, insert on game_moves to spectator;
+grant select, update on bets to spectator;
+grant select on bet_enclosures to spectator;
+grant update on players to spectator;
+grant usage, select on sequence moves_id_seq to spectator;
 
 create user bookmaker with encrypted password 'bookmaker';
 grant select on referees, players, games, moves, game_moves to bookmaker;
@@ -142,7 +146,7 @@ $$
 		express_status := 1;
 		for encl_bet in
 			select enclosure_id as id, type, condition, coefficient, status, game_id
-			from game_moves gm join bets b on enclosure_id = id
+			from bet_enclosures be join bets b on enclosure_id = id
 			where bet_id = bet.id
 		loop
 			if encl_bet.game_id = game.id then
@@ -184,7 +188,7 @@ $update_bets_status_trigger$
 				end if;
 			
 			elsif bet.type = 1 then
-				express_status := new_express_status(bet, game);
+				express_status := new_express_status(bet, old);
 				if express_status != bet.status then
 					update bets set status = express_status where id = bet.id;
 				end if;
@@ -192,7 +196,7 @@ $update_bets_status_trigger$
 			elsif bet.type = 2 then
 				for express in
 					select enclosure_id as id, type, condition, coefficient, status, game_id
-					from game_moves gm join bets b on enclosure_id = id
+					from bet_enclosures be join bets b on enclosure_id = id
 					where bet_id = bet.id
 				loop
 					express_status := new_express_status(express, old);
@@ -224,6 +228,7 @@ language plpgsql;
 
 create trigger remove_next_moves_trigger
 after delete on game_moves
+for each row
 when (pg_trigger_depth() = 0)
 execute function remove_next_moves();
 
@@ -400,3 +405,13 @@ create trigger update_raitings_trigger
 after update of result on games
 for each row 
 execute function update_raitings();
+
+select game_id, round, duration, g.number as number, result, date, referee_id, first_player_id, second_player_id, move_id, jm.number as move_number, figure, start_cell, end_cell, comment
+from
+(
+    select game_id, move_id, figure, start_cell, end_cell, number, comment
+    from game_moves gm join moves m on move_id = m.id
+) as jm
+join games g on g.id = game_id
+where game_id = 1
+order by move_number;

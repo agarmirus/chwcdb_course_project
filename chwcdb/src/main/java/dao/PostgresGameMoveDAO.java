@@ -75,9 +75,10 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
             }
 
             String query = String.format(
-                "select game_id, round, duration, number, m.number as move_number, result, date, referee_id, first_player_id, second_player_id, move_id, figure, start_cell, end_cell, comment " +
-                "from (select game_id, move_id, number, comment from game_moves gm join moves m on gm.id = m.game_id where %s = %d) " +
-                "join games g on game_id = g.id " +
+                "select game_id, round, duration, g.number as number, result, date, referee_id, first_player_id, second_player_id, move_id, jm.number as move_number, figure, start_cell, end_cell, comment " +
+                "from (select game_id, move_id, figure, start_cell, end_cell, number, comment from game_moves gm join moves m on move_id = m.id) as jm " +
+                "join games g on g.id = game_id " +
+                "where %s = '%s' " +
                 "order by move_number;",
                 attributeName,
                 value
@@ -152,17 +153,17 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
 
             Statement statement = connection.createStatement();
 
+            statement.executeUpdate(
+                String.format(
+                    "delete from game_moves where game_id = %d;",
+                    entities.get(0).getGame().getId()
+                )
+            );
+
             for (var entity: entities)
             {
                 Move move = entity.getMove();
                 Game game = entity.getGame();
-
-                statement.executeUpdate(
-                    String.format(
-                        "delete from game_moves where game_id = %d;",
-                        game.getId()
-                    )
-                );
 
                 ResultSet resultSet = statement.executeQuery(
                     String.format(
@@ -202,7 +203,7 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
                 else
                     moveId = resultSet.getInt("id");
 
-                statement.executeQuery(
+                statement.executeUpdate(
                     String.format(
                         "insert into game_moves values (%d, %d, %d, '%s')",
                         game.getId(),
@@ -271,13 +272,13 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
             }
 
             String query = String.format(
-                "delete from game_move where game_id = %d and move_id = %d;",
+                "delete from game_moves where game_id = %d and move_id = %d;",
                 entity.getGame().getId(),
                 entity.getMove().getId()
             );
 
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {

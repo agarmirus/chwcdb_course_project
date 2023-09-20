@@ -408,6 +408,12 @@ public class SpectatorView extends IView {
 	}
 
 	@Override
+	public GameResult getGameResult()
+	{
+		return GameResult.values()[resultBox.getSelectedIndex()];
+	}
+
+	@Override
 	public Integer getMoveId()
 	{
 		return (Integer)moveIdSpinner.getValue();
@@ -465,7 +471,7 @@ public class SpectatorView extends IView {
 				return null;
 			
 			String comment = null;
-			String[] moveStrParts = moveStr.split(" ", 1);
+			String[] moveStrParts = moveStr.split(" ", 2);
 
 			if (moveStrParts.length >= 2)
 				comment = moveStrParts[1].strip();

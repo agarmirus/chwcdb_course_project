@@ -12,6 +12,7 @@ import org.redisson.api.RedissonClient;
 import appexception.CHWCDBInvalidInputException;
 import entity.Game;
 import entity.Move;
+import entity.enums.GameResult;
 import model.IModel;
 import regulator.IRegulator;
 import view.IView;
@@ -138,17 +139,33 @@ public class SpectatorPresenter implements IPresenter
                 "Enter game ID"
             );
 
+        Integer duration = view.getGameDuration();
+
+        if (duration == null)
+            throw new CHWCDBInvalidInputException(
+                "Invalid game duration"
+            );
+
+        GameResult result = view.getGameResult();
+
+        if (result == null)
+            throw new CHWCDBInvalidInputException(
+                "Invalid game result"
+            );
+
         var jsonObject = new JSONObject();
         
         jsonObject.put("op", "end");
         jsonObject.put("type", "game");
         jsonObject.put("id", id);
+        jsonObject.put("duration", duration);
+        jsonObject.put("result", result.ordinal());
 
         taskQueue.add(jsonObject.toString());
 
         model.runTaskQueue();
 
-        view.showInfoDialog("Game has been removed");
+        view.showInfoDialog("Game has been ended");
     }
 
     void gameInfo() throws Exception

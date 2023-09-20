@@ -111,7 +111,7 @@ public class BookmakerPresenter implements IPresenter
         jsonObject.put("type", "bet");
         jsonObject.put("op", "insert");
         jsonObject.put("id", id);
-        jsonObject.put("betType", type);
+        jsonObject.put("betType", type.ordinal());
         
         if (type == BetType.ELEMENTARY)
         {
@@ -185,7 +185,7 @@ public class BookmakerPresenter implements IPresenter
         var jsonObject = new JSONObject();
 
         jsonObject.put("type", "bet");
-        jsonObject.put("op", "insert");
+        jsonObject.put("op", "remove");
         jsonObject.put("id", id);
 
         taskQueue.add(jsonObject.toString());
@@ -214,7 +214,7 @@ public class BookmakerPresenter implements IPresenter
         var jsonObject = new JSONObject();
 
         jsonObject.put("type", "bet");
-        jsonObject.put("op", "insert");
+        jsonObject.put("op", "update");
         jsonObject.put("id", id);
         jsonObject.put("status", status.ordinal());
 

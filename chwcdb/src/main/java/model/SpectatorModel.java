@@ -42,49 +42,49 @@ public class SpectatorModel extends IModel
     {
         if (gameDAO == null)
             throw new CHWCDBNullDAOException(
-                "RefereeModel.addGame(Game): game DAO is null"
+                "SpectatorModel.addGame(Game): game DAO is null"
             );
         
         if (game == null)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.addGame(Game): game is null"
+                "SpectatorModel.addGame(Game): game is null"
             );
         
         int round = game.getRound();
 
         if (round < 1 || round > 8)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.addGame(Game): round is not in range from 1 to 8"
+                "SpectatorModel.addGame(Game): round is not in range from 1 to 8"
             );
 
         if (game.getNumber() < 1)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.addGame(Game): game number is less than 1"
+                "SpectatorModel.addGame(Game): game number is less than 1"
             );
         
         if (game.getDate() == null)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.addGame(Game): date is null"
+                "SpectatorModel.addGame(Game): date is null"
             );
         
         if (game.getRefereeId() < 1)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.addGame(Game): referee ID is less than 1"
+                "SpectatorModel.addGame(Game): referee ID is less than 1"
             );
         
         if (game.getFirstPlayerId() < 1)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.addGame(Game): first player ID is less than 1"
+                "SpectatorModel.addGame(Game): first player ID is less than 1"
             );
         
         if (game.getSecondPlayerId() < 1)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.addGame(Game): second player ID is less than 1"
+                "SpectatorModel.addGame(Game): second player ID is less than 1"
             );
 
         if (game.getFirstPlayerId() == game.getSecondPlayerId())
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.addGame(Game): players are not different"
+                "SpectatorModel.addGame(Game): players are not different"
             );
         
         game.setDuration(0);
@@ -98,17 +98,17 @@ public class SpectatorModel extends IModel
     {
         if (gameDAO == null)
             throw new CHWCDBNullDAOException(
-                "RefereeModel.removeGame(Game): game DAO is null"
+                "SpectatorModel.removeGame(Game): game DAO is null"
             );
         
         if (game == null)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.removeGame(Game): game is null"
+                "SpectatorModel.removeGame(Game): game is null"
             );
         
         if (game.getId() < 1)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.removeGame(Game): game ID is less than 1"
+                "SpectatorModel.removeGame(Game): game ID is less than 1"
             );
         
         gameDAO.delete(game);
@@ -119,31 +119,31 @@ public class SpectatorModel extends IModel
     {
         if (gameDAO == null)
             throw new CHWCDBNullDAOException(
-                "RefereeModel.endGame(Game): game DAO is null"
+                "SpectatorModel.endGame(Game): game DAO is null"
             );
         
         if (game == null)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.endGame(Game): game is null"
+                "SpectatorModel.endGame(Game): game is null"
             );
         
         if (game.getId() < 1)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.endGame(Game): game ID is less than 1"
+                "SpectatorModel.endGame(Game): game ID is less than 1"
             );
         
         int duration = game.getDuration();
 
         if (duration < 0)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.endGame(Game): game duration is less than 1"
+                "SpectatorModel.endGame(Game): game duration is less than 1"
             );
 
         GameResult result = game.getResult();
         
         if (result == null)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.endGame(Game): game result is null"
+                "SpectatorModel.endGame(Game): game result is null"
             );
         
         List<Pair<String, String>> updates = new ArrayList<>();
@@ -166,19 +166,19 @@ public class SpectatorModel extends IModel
     {
         if (gameMoveDAO == null)
             throw new CHWCDBNullDAOException(
-                "RefereeModel.getGameMoves(Game): game move DAO is null"
+                "SpectatorModel.getGameMoves(Game): game move DAO is null"
             );
         
         if (game == null)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.getGameMoves(Game): game is null"
+                "SpectatorModel.getGameMoves(Game): game is null"
             );
 
         int gameId = game.getId();
         
         if (gameId < 1)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.getGameMoves(Game): game ID is less than 1"
+                "SpectatorModel.getGameMoves(Game): game ID is less than 1"
             );
         
         var result = gameMoveDAO.get("game_id", Integer.toString(gameId));
@@ -191,12 +191,12 @@ public class SpectatorModel extends IModel
     {
         if (gameMoveDAO == null)
             throw new CHWCDBNullDAOException(
-                "RefereeModel.addMoves(List<GameMove>): game move DAO is null"
+                "SpectatorModel.addMoves(List<GameMove>): game move DAO is null"
             );
         
         if (gameMoves == null)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.addMoves(List<GameMove>): game moves list is null"
+                "SpectatorModel.addMoves(List<GameMove>): game moves list is null"
             );
         
         if (!gameMoves.isEmpty())
@@ -205,45 +205,45 @@ public class SpectatorModel extends IModel
             {
                 if (gameMove == null)
                     throw new CHWCDBInvalidParameterException(
-                        "RefereeModel.addMoves(List<GameMove>): game move is null"
+                        "SpectatorModel.addMoves(List<GameMove>): game move is null"
                     );
                     
                 Game game = gameMove.getGame();
 
                 if (game == null)
                     throw new CHWCDBInvalidParameterException(
-                        "RefereeModel.addMoves(List<GameMove>): game is null"
+                        "SpectatorModel.addMoves(List<GameMove>): game is null"
                     );
 
                 if (game.getId() < 1)
                     throw new CHWCDBInvalidParameterException(
-                        "RefereeModel.addMoves(List<GameMove>): game ID is less than 1"
+                        "SpectatorModel.addMoves(List<GameMove>): game ID is less than 1"
                     );
                 
                 Move move = gameMove.getMove();
 
                 if (move == null)
                     throw new CHWCDBInvalidParameterException(
-                        "RefereeModel.addMoves(List<GameMove>): move is null"
+                        "SpectatorModel.addMoves(List<GameMove>): move is null"
                     );
 
                 if (move.getFigure() == null)
                     throw new CHWCDBInvalidParameterException(
-                        "RefereeModel.addMoves(List<GameMove>): move doesn't have a figure"
+                        "SpectatorModel.addMoves(List<GameMove>): move doesn't have a figure"
                     );
                 
                 String startCell = move.getStartCell();
 
                 if (startCell == null || startCell.isEmpty())
                     throw new CHWCDBInvalidParameterException(
-                        "RefereeModel.addMoves(List<GameMove>): move doesn't have a start cell"
+                        "SpectatorModel.addMoves(List<GameMove>): move doesn't have a start cell"
                     );
 
                 String endCell = move.getEndCell();
 
                 if (endCell == null || endCell.isEmpty())
                     throw new CHWCDBInvalidParameterException(
-                        "RefereeModel.addMoves(List<GameMove>): move doesn't have an end cell"
+                        "SpectatorModel.addMoves(List<GameMove>): move doesn't have an end cell"
                     );
             }
             
@@ -256,50 +256,31 @@ public class SpectatorModel extends IModel
     {
         if (gameMoveDAO == null)
             throw new CHWCDBNullDAOException(
-                "RefereeModel.removeMove(GameMove): game move DAO is null"
+                "SpectatorModel.removeMove(GameMove): game move DAO is null"
             );
         
         if (gameMove == null)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.removeMove(GameMove): game move is null"
+                "SpectatorModel.removeMove(GameMove): game move is null"
             );
         
         Game game = gameMove.getGame();
 
         if (game == null)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.removeMove(GameMove): game is null"
+                "SpectatorModel.removeMove(GameMove): game is null"
             );
 
         if (game.getId() < 1)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.removeMove(GameMove): game ID is less than 1"
+                "SpectatorModel.removeMove(GameMove): game ID is less than 1"
             );
         
         Move move = gameMove.getMove();
 
         if (move == null)
             throw new CHWCDBInvalidParameterException(
-                "RefereeModel.removeMove(GameMove): move is null"
-            );
-
-        if (move.getFigure() == null)
-            throw new CHWCDBInvalidParameterException(
-                "RefereeModel.addMoves(List<GameMove>): move doesn't have a figure"
-            );
-        
-        String startCell = move.getStartCell();
-
-        if (startCell == null || startCell.isEmpty())
-            throw new CHWCDBInvalidParameterException(
-                "RefereeModel.addMoves(List<GameMove>): move doesn't have a start cell"
-            );
-
-        String endCell = move.getEndCell();
-
-        if (endCell == null || endCell.isEmpty())
-            throw new CHWCDBInvalidParameterException(
-                "RefereeModel.addMoves(List<GameMove>): move doesn't have an end cell"
+                "SpectatorModel.removeMove(GameMove): move is null"
             );
         
         gameMoveDAO.delete(gameMove);
@@ -320,20 +301,20 @@ public class SpectatorModel extends IModel
         );
     }
 
-    GameMove getGameMoveFromJSON(JSONObject jsonObject) throws Exception
+    GameMove getRemovingGameMoveFromJSON(JSONObject jsonObject) throws Exception
     {
         if (jsonObject.has("comment"))
             return new GameMove(
                 new Game(jsonObject.getInt("gameId")),
                 new Move(jsonObject.getInt("moveId")),
-                jsonObject.getInt("number"),
-                jsonObject.getString("comment")
+                null,
+                null
             );
         
         return new GameMove(
             new Game(jsonObject.getInt("gameId")),
             new Move(jsonObject.getInt("moveId")),
-            jsonObject.getInt("number"),
+            null,
             null
         );
     }
@@ -381,17 +362,31 @@ public class SpectatorModel extends IModel
             String op = jsonObject.getString("op");
 
             if (type.equals("gameMove"))
+            {
                 if (op.equals("remove"))
-                    removeMove(getGameMoveFromJSON(jsonObject));
+                    removeMove(getRemovingGameMoveFromJSON(jsonObject));
                 else if (op.equals("insertMany"))
                     addMoves(getGameMovesFromJSON(jsonObject));
+            }
             else if (type.equals("game"))
+            {
                 if (op.equals("insert"))
                     addGame(getGameFromJSON(jsonObject));
                 else if (op.equals("remove"))
                     removeGame(new Game(jsonObject.getInt("id")));
                 else if (op.equals("end"))
-                    endGame(new Game(jsonObject.getInt("id")));
+                {
+                    Integer id = jsonObject.getInt("id");
+                    Integer duration = jsonObject.getInt("duration");
+                    GameResult result = GameResult.values()[jsonObject.getInt("result")];
+
+                    var game = new Game(id);
+                    game.setDuration(duration);
+                    game.setResult(result);
+
+                    endGame(game);
+                }
+            }
         }
         catch (Exception e)
         {

@@ -230,6 +230,7 @@ public class BookmakerModel extends IModel
             String op = jsonObject.getString("op");
 
             if (type.equals("bet"))
+            {
                 if (op.equals("insert"))
                     addBet(getBetFromJSON(jsonObject));
                 else if (op.equals("remove"))
@@ -241,6 +242,7 @@ public class BookmakerModel extends IModel
 
                     updateBetStatus(bet);
                 }
+            }
         }
         catch (Exception e)
         {

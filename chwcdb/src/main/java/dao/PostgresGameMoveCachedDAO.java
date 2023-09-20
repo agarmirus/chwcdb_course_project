@@ -70,9 +70,10 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
 
                     Statement statement = connection.createStatement();
                     String query = String.format(
-                        "select game_id, round, duration, number, move_number, result, date, referee_id, first_player_id, second_player_id, move_id, figure, start_cell, end_cell, comment " +
-                        "from (select game_id, move_id, number as move_number, comment from game_moves gm join moves m on gm.id = m.game_id where game_id = %d and move_id = %d) " +
-                        "join games g on game_id = g.id " +
+                        "select game_id, round, duration, g.number as number, result, date, referee_id, first_player_id, second_player_id, move_id, jm.number as move_number, figure, start_cell, end_cell, comment " +
+                        "from (select game_id, move_id, figure, start_cell, end_cell, number, comment from game_moves gm join moves m on move_id = m.id) as jm " +
+                        "join games g on g.id = game_id " +
+                        "where game_id = %d and move_id = %d" +
                         "order by move_number;",
                         gameId,
                         moveId
@@ -116,18 +117,25 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
                 {
                     Statement statement = connection.createStatement();
 
+                    boolean deleted = false;
+
                     for (var entry: map.entrySet())
                     {
                         String[] keyParts = entry.getKey().split(":");
 
                         Integer gameId = Integer.parseInt(keyParts[1]);
 
-                        statement.executeQuery(
-                            String.format(
-                                "delete from game_moves where game_id = %d;",
-                                gameId
-                            )
-                        );
+                        if (!deleted)
+                        {
+                            statement.executeQuery(
+                                String.format(
+                                    "delete from game_moves where game_id = %d;",
+                                    gameId
+                                )
+                            );
+
+                            deleted = true;
+                        }
 
                         var valueJSONObject = new JSONObject(entry.getValue());
 
