@@ -47,17 +47,23 @@ public class Regulator implements IRegulator
                 logger
             );
         else
-            model = new UnauthorizedModelLogDecorator(
-                new UnauthorizedModel(new PostgresUserDAO(connStr, "unauthorized", "unauthorized")),
-                logger
-            );
+            // model = new UnauthorizedModelLogDecorator(
+            //     new UnauthorizedModel(new PostgresUserDAO(connStr, "unauthorized", "unauthorized")),
+            //     logger
+            // );
+            model = 
+                new UnauthorizedModel(new PostgresUserDAO(connStr, "unauthorized", "unauthorized"));
 
-        IView view = new UnauthorizedViewLogDecorator(
-            new UnauthorizedView(),
-            logger
-        );
+        // IView view = new UnauthorizedViewLogDecorator(
+        //     new UnauthorizedView(),
+        //     logger
+        // );
+        IView view =
+            new UnauthorizedView();
 
         presenter = new UnauthorizedPresenter(model, view, this);
+
+        view.setPresenterListener(presenter);
     }
 
     public void changeUser(final UserRole role) throws Exception
@@ -76,21 +82,31 @@ public class Regulator implements IRegulator
                     logger
                 );
             else
-                model = new SpectatorModelLogDecorator(
-                new SpectatorModel(
-                        new PostgresGameDAO(connStr, "spectator", "spectator"),
-                        new PostgresGameMoveDAO(connStr, "spectator", "spectator"),
+                // model = new SpectatorModelLogDecorator(
+                //     new SpectatorModel(
+                //         new PostgresGameDAO(connStr, "spectator", "spectator"),
+                //         new PostgresGameMoveDAO(connStr, "spectator", "spectator"),
+                //         client
+                //     ),
+                //     logger
+                // );
+                model =
+                    new SpectatorModel(
+                        new PostgresGameCachedDAO(connStr, "spectator", "spectator", client, ttl),
+                        new PostgresGameMoveCachedDAO(connStr, "spectator", "spectator", client, ttl),
                         client
-                    ),
-                    logger
-                );
+                    );
 
-            IView view = new SpectatorViewLogDecorator(
-                new SpectatorView(),
-                logger
-            );
+            // IView view = new SpectatorViewLogDecorator(
+            //     new SpectatorView(),
+            //     logger
+            // );
+            IView view =
+                new SpectatorView();
 
             presenter = new SpectatorPresenter(model, view, this, client);
+
+            view.setPresenterListener(presenter);
         }
         else if (role == UserRole.BOOKMAKER)
         {
@@ -107,22 +123,32 @@ public class Regulator implements IRegulator
                 );
             else
             {
-                model = new BookmakerModelLogDecorator(
+                // model = new BookmakerModelLogDecorator(
+                //     new BookmakerModel(
+                //         new PostgresGameMoveDAO(connStr, "bookmaker", "bookmaker"),
+                //         new PostgresBetDAO(connStr, "bookmaker", "bookmaker"),
+                //         client
+                //     ),
+                //     logger
+                // );
+                model =
                     new BookmakerModel(
-                        new PostgresGameMoveDAO(connStr, "bookmaker", "bookmaker"),
-                        new PostgresBetDAO(connStr, "bookmaker", "bookmaker"),
+                        new PostgresGameMoveCachedDAO(connStr, "bookmaker", "bookmaker", client, ttl),
+                        new PostgresBetCachedDAO(connStr, "bookmaker", "bookmaker", client, ttl),
                         client
-                    ),
-                    logger
-                );
+                    );
             }
 
-            IView view = new BookmakerViewLogDecorator(
-                new BookmakerView(),
-                logger
-            );
+            // IView view = new BookmakerViewLogDecorator(
+            //     new BookmakerView(),
+            //     logger
+            // );
+            IView view =
+                new BookmakerView();
 
             presenter = new BookmakerPresenter(model, view, this, client);
+
+            view.setPresenterListener(presenter);
         }
         else if (role == UserRole.ADMIN)
         {
@@ -143,26 +169,40 @@ public class Regulator implements IRegulator
                 );
             else
             {
-                model = new AdminModelLogDecorator(
+                // model = new AdminModelLogDecorator(
+                //     new AdminModel(
+                //         new PostgresGameDAO(connStr, "administrator", "administrator"),
+                //         new PostgresGameMoveDAO(connStr, "administrator", "administrator"),
+                //         new PostgresBetDAO(connStr, "administrator", "administrator"),
+                //         new PostgresPlayerDAO(connStr, "administrator", "administrator"),
+                //         new PostgresUserDAO(connStr, "administrator", "administrator"),
+                //         new PostgresRefereeDAO(connStr, "administrator", "administrator"),
+                //         client
+                //     ),
+                //     logger
+                // );
+                model = 
                     new AdminModel(
-                        new PostgresGameDAO(connStr, "administrator", "administrator"),
-                        new PostgresGameMoveDAO(connStr, "administrator", "administrator"),
-                        new PostgresBetDAO(connStr, "administrator", "administrator"),
-                        new PostgresPlayerDAO(connStr, "administrator", "administrator"),
-                        new PostgresUserDAO(connStr, "administrator", "administrator"),
-                        new PostgresRefereeDAO(connStr, "administrator", "administrator"),
+                        new PostgresGameCachedDAO(connStr, "administrator", "administrator", client, ttl),
+                        new PostgresGameMoveCachedDAO(connStr, "administrator", "administrator", client, ttl),
+                        new PostgresBetCachedDAO(connStr, "administrator", "administrator", client, ttl),
+                        new PostgresPlayerCachedDAO(connStr, "administrator", "administrator", client, ttl),
+                        new PostgresUserCachedDAO(connStr, "administrator", "administrator", client, ttl),
+                        new PostgresRefereeCachedDAO(connStr, "administrator", "administrator", client, ttl),
                         client
-                    ),
-                    logger
                 );
             }
 
-            IView view = new AdminViewLogDecorator(
-                new AdminView(),
-                logger
-            );
+            // IView view = new AdminViewLogDecorator(
+            //     new AdminView(),
+            //     logger
+            // );
+            IView view =
+                new AdminView();
 
             presenter = new AdminPresenter(model, view, this, client);
+
+            view.setPresenterListener(presenter);
         }
     }
 }

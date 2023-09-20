@@ -87,7 +87,7 @@ public class PostgresPlayerDAO implements IDAO<Player>
             );
             
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {
@@ -159,7 +159,7 @@ public class PostgresPlayerDAO implements IDAO<Player>
             );
 
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {

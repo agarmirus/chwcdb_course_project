@@ -424,8 +424,13 @@ public class SpectatorView extends IView {
 	@Override
 	public List<GameMove> getMoves()
 	{
-		String[] movesStr = movesTextArea.getText().strip().split("\n");
 		List<GameMove> moves = new ArrayList<GameMove>();
+		String str = movesTextArea.getText().strip();
+
+		if (str.isEmpty())
+			return moves;
+
+		String[] movesStr = str.split("\n");
 		int i = 0;
 
 		for (String moveStr: movesStr)
@@ -463,7 +468,7 @@ public class SpectatorView extends IView {
 			String[] moveStrParts = moveStr.split(" ", 1);
 
 			if (moveStrParts.length >= 2)
-				comment = moveStrParts[1];
+				comment = moveStrParts[1].strip();
 			
 			Move move = new Move(0, figure, startCell, endCell);
 

@@ -125,7 +125,7 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresGameMoveDAO.delete(GameMove): %s",
+                    "PostgresGameMoveDAO.get(GameMove): %s",
                     e.getMessage()
                 )
             );
@@ -157,7 +157,7 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
                 Move move = entity.getMove();
                 Game game = entity.getGame();
 
-                statement.executeQuery(
+                statement.executeUpdate(
                     String.format(
                         "delete from game_moves where game_id = %d;",
                         game.getId()
@@ -177,9 +177,18 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
 
                 if (!resultSet.next())
                 {
+                    statement.executeUpdate(
+                        String.format(
+                            "insert into moves values (default, %d, '%s', '%s')",
+                            move.getFigure().ordinal(),
+                            move.getStartCell(),
+                            move.getEndCell()
+                        )
+                    );
+
                     ResultSet moveResultSet = statement.executeQuery(
                         String.format(
-                            "insert into moves values (%d, '%s', '%s')",
+                            "select * from moves where figure = %d and start_cell = '%s' and end_cell = '%s';",
                             move.getFigure().ordinal(),
                             move.getStartCell(),
                             move.getEndCell()
@@ -208,7 +217,7 @@ public class PostgresGameMoveDAO implements IDAO<GameMove>
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresGameMoveDAO.delete(GameMove): %s",
+                    "PostgresGameMoveDAO.create(List<GameMove>): %s",
                     e.getMessage()
                 )
             );

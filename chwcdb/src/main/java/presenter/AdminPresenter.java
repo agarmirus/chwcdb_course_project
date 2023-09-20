@@ -129,6 +129,8 @@ public class AdminPresenter implements IPresenter
         taskQueue.add(jsonObject.toString());
 
         model.runTaskQueue();
+
+        view.showInfoDialog("Game has been removed");
     }
 
     void addPlayer() throws Exception
@@ -195,6 +197,8 @@ public class AdminPresenter implements IPresenter
         taskQueue.add(jsonObject.toString());
 
         model.runTaskQueue();
+
+        view.showInfoDialog("Player has been added");
     }
 
     void removePlayer() throws Exception
@@ -215,6 +219,8 @@ public class AdminPresenter implements IPresenter
         taskQueue.add(jsonObject.toString());
 
         model.runTaskQueue();
+
+        view.showInfoDialog("Player has been removed");
     }
 
     void addReferee() throws Exception
@@ -273,6 +279,8 @@ public class AdminPresenter implements IPresenter
         taskQueue.add(jsonObject.toString());
 
         model.runTaskQueue();
+
+        view.showInfoDialog("Referee has been added");
     }
 
     void removeReferee() throws Exception
@@ -293,6 +301,8 @@ public class AdminPresenter implements IPresenter
         taskQueue.add(jsonObject.toString());
 
         model.runTaskQueue();
+
+        view.showInfoDialog("Referee has been removed");
     }
 
     void addUser() throws Exception
@@ -331,6 +341,8 @@ public class AdminPresenter implements IPresenter
         taskQueue.add(jsonObject.toString());
 
         model.runTaskQueue();
+
+        view.showInfoDialog("User has been added");
     }
 
     void removeUser() throws Exception
@@ -351,6 +363,8 @@ public class AdminPresenter implements IPresenter
         taskQueue.add(jsonObject.toString());
 
         model.runTaskQueue();
+
+        view.showInfoDialog("User has been removed");
     }
     
     void signOut() throws Exception

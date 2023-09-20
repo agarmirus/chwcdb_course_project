@@ -266,9 +266,7 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
             JSONObject jsonObject = new JSONObject();
 
             jsonObject.put("round", entity.getRound());
-            jsonObject.put("duration", entity.getDuration());
             jsonObject.put("number", entity.getNumber());
-            jsonObject.put("result", entity.getResult().ordinal());
             jsonObject.put("date", new SimpleDateFormat("yyyy-MM-dd").format(entity.getDate()));
             jsonObject.put("refereeId", entity.getRefereeId());
             jsonObject.put("firstPlayerId", entity.getFirstPlayerId());

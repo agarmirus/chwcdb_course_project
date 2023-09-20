@@ -1,8 +1,8 @@
 {
-    "conn": "jdbc:postgresql://localhost:5432/postgres",
+    "conn": "jdbc:postgresql://localhost:5432/chwcdb",
     "redisConn": "redis://localhost:6379",
     "influxConn": "https://localhost:8086",
     "logLevel": "all",
-    "cached": true,
+    "cached": false,
     "ttl": 5000
 }

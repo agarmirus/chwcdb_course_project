@@ -76,21 +76,23 @@ public class App
             if (cached)
                 ttl = configJSONObject.getLong("ttl");
             
-            InfluxDB influx = InfluxDBFactory.connect(influxConnString, "logger", "logger");
+            // InfluxDB influx = InfluxDBFactory.connect(influxConnString, "logger", "logger");
 
-            ILogger logger = new InfluxLogger(influx, 100, 200);
-            setLogLevel(logger, logLevelString);
+            // ILogger logger = new InfluxLogger(influx, 100, 200);
+            // setLogLevel(logger, logLevelString);
 
             var config = new Config();
             config.useSingleServer().setAddress(redisConnString);
 
             RedissonClient redisClient = Redisson.create(config);
 
-            new Regulator(connString, redisClient, influx, cached, ttl, logger);
+            // new Regulator(connString, redisClient, influx, cached, ttl, logger).changeUser();
+            new Regulator(connString, redisClient, null, cached, ttl, null).changeUser();
         }
         catch (Exception e)
         {
             System.out.println(e.getMessage());
+            System.exit(1);
         }
     }
 }

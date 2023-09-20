@@ -133,7 +133,7 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
 
                         ResultSet moveResultSet = statement.executeQuery(
                             String.format(
-                                "select * from moves where figure = %d and start_cell = '%s' and end_cell = '%s';",
+                                "select * from moves wh ere figure = %d and start_cell = '%s' and end_cell = '%s';",
                                 valueJSONObject.getInt("figure"),
                                 valueJSONObject.getString("startCell"),
                                 valueJSONObject.getString("endCell")
@@ -144,9 +144,18 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
 
                         if (!moveResultSet.next())
                         {
-                            ResultSet createdMove = statement.executeQuery(
+                            statement.executeUpdate(
                                 String.format(
                                     "insert into moves values (%d, '%s', '%s');",
+                                    valueJSONObject.getInt("figure"),
+                                    valueJSONObject.getString("startCell"),
+                                    valueJSONObject.getString("endCell")
+                                )
+                            );
+
+                            ResultSet createdMove = statement.executeQuery(
+                                String.format(
+                                    "select * from moves wh ere figure = %d and start_cell = '%s' and end_cell = '%s';",
                                     valueJSONObject.getInt("figure"),
                                     valueJSONObject.getString("startCell"),
                                     valueJSONObject.getString("endCell")

@@ -110,7 +110,7 @@ public class PostgresBetDAO implements IDAO<Bet>
             }
 
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {
@@ -163,7 +163,7 @@ public class PostgresBetDAO implements IDAO<Bet>
             );
 
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {
@@ -207,7 +207,7 @@ public class PostgresBetDAO implements IDAO<Bet>
             );
 
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {

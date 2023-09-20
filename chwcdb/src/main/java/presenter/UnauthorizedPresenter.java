@@ -52,7 +52,7 @@ public class UnauthorizedPresenter implements IPresenter
             throw new CHWCDBInvalidInputException(
                 "Authentication failed"
             );
-        
+
         view.closeWindow();
         regulator.changeUser(optUser.get().getRole());
     }

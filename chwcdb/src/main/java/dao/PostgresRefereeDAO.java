@@ -86,7 +86,7 @@ public class PostgresRefereeDAO implements IDAO<Referee>
             );
             
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {
@@ -158,7 +158,7 @@ public class PostgresRefereeDAO implements IDAO<Referee>
             );
 
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {

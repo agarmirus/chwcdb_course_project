@@ -59,7 +59,7 @@ public class PostgresRefereeCachedDAO extends PostgresRefereeDAO
                         preparedStatement.setString(2, jsonObject.getString("firstName"));
                         preparedStatement.setString(3, jsonObject.getString("secondName"));
                         preparedStatement.setString(4, jsonObject.getString("thirdName"));
-                        preparedStatement.setString(5, jsonObject.getString("data"));
+                        preparedStatement.setString(5, jsonObject.getString("birthDate"));
                         preparedStatement.setString(6, jsonObject.getString("country"));
 
                         preparedStatement.addBatch();
@@ -70,6 +70,7 @@ public class PostgresRefereeCachedDAO extends PostgresRefereeDAO
                 }
                 catch (Exception e)
                 {
+                    System.out.println(e.getMessage());
                     return;
                 }
             }

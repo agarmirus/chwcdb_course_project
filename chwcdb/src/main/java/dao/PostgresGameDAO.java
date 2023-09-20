@@ -126,12 +126,10 @@ public class PostgresGameDAO implements IDAO<Game>
             }
 
             String query = String.format(
-                "insert into games values (%d, %d, %d, %d, %d, '%s', %d, %d, %d);",
+                "insert into games values (%d, %d, null, %d, null, '%s', %d, %d, %d);",
                 entity.getId(),
                 entity.getRound(),
-                entity.getDuration(),
                 entity.getNumber(),
-                entity.getResult().ordinal(),
                 new SimpleDateFormat("yyyy-MM-dd").format(entity.getDate()),
                 entity.getRefereeId(),
                 entity.getFirstPlayerId(),
@@ -139,7 +137,7 @@ public class PostgresGameDAO implements IDAO<Game>
             );
             
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {
@@ -214,7 +212,7 @@ public class PostgresGameDAO implements IDAO<Game>
             query += String.format(" where id = %d;", entity.getId());
 
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {
@@ -251,7 +249,7 @@ public class PostgresGameDAO implements IDAO<Game>
             );
 
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {

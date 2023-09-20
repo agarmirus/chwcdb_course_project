@@ -125,6 +125,8 @@ public class SpectatorPresenter implements IPresenter
         taskQueue.add(jsonObject.toString());
 
         model.runTaskQueue();
+
+        view.showInfoDialog("Game has been removed");
     }
 
     void endGame() throws Exception

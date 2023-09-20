@@ -246,7 +246,7 @@ public class SpectatorModel extends IModel
                         "RefereeModel.addMoves(List<GameMove>): move doesn't have an end cell"
                     );
             }
-
+            
             gameMoveDAO.create(gameMoves);
         }
     }
@@ -322,11 +322,19 @@ public class SpectatorModel extends IModel
 
     GameMove getGameMoveFromJSON(JSONObject jsonObject) throws Exception
     {
+        if (jsonObject.has("comment"))
+            return new GameMove(
+                new Game(jsonObject.getInt("gameId")),
+                new Move(jsonObject.getInt("moveId")),
+                jsonObject.getInt("number"),
+                jsonObject.getString("comment")
+            );
+        
         return new GameMove(
             new Game(jsonObject.getInt("gameId")),
             new Move(jsonObject.getInt("moveId")),
             jsonObject.getInt("number"),
-            jsonObject.getString("comment")
+            null
         );
     }
 
@@ -339,6 +347,12 @@ public class SpectatorModel extends IModel
         var arr = jsonObject.getJSONArray("params");
 
         for (int i = 0; i < arr.length(); ++i)
+        {
+            String comment = null;
+
+            if (arr.getJSONObject(i).has("comment"))
+                comment = arr.getJSONObject(i).getString("comment");
+
             result.add(
                 new GameMove(
                     game,
@@ -349,9 +363,10 @@ public class SpectatorModel extends IModel
                         arr.getJSONObject(i).getString("endCell")
                     ),
                     arr.getJSONObject(i).getInt("number"),
-                    arr.getJSONObject(i).getString("comment")
+                    comment
                 )
             );
+        }
         
         return result;
     }
@@ -365,19 +380,18 @@ public class SpectatorModel extends IModel
             String type = jsonObject.getString("type");
             String op = jsonObject.getString("op");
 
-            if (type.equals("game"))
+            if (type.equals("gameMove"))
+                if (op.equals("remove"))
+                    removeMove(getGameMoveFromJSON(jsonObject));
+                else if (op.equals("insertMany"))
+                    addMoves(getGameMovesFromJSON(jsonObject));
+            else if (type.equals("game"))
                 if (op.equals("insert"))
                     addGame(getGameFromJSON(jsonObject));
                 else if (op.equals("remove"))
                     removeGame(new Game(jsonObject.getInt("id")));
                 else if (op.equals("end"))
                     endGame(new Game(jsonObject.getInt("id")));
-            else if (type.equals("gameMove"))
-                if (op.equals("remove"))
-                    removeMove(getGameMoveFromJSON(jsonObject));
-                else if (op.equals("insertMany"))
-                    addMoves(getGameMovesFromJSON(jsonObject));
-                
         }
         catch (Exception e)
         {

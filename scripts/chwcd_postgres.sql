@@ -28,7 +28,7 @@ create table if not exists players
 
 create table if not exists moves
 (
-	id int primary key,
+	id serial primary key,
 	figure int not null check (figure >= 0 and figure <= 5),
 	start_cell text not null check (start_cell != ''),
 	end_cell text not null check (end_cell != '')
@@ -91,6 +91,7 @@ grant select, update, delete, insert on games to administrator;
 grant select, update, delete, insert on moves to administrator;
 grant select, update, delete, insert on players to administrator;
 grant select, update, delete, insert on referees to administrator;
+grant select, update, delete, insert on users to administrator;
 
 create user spectator with encrypted password 'spectator';
 grant select on referees, players to spectator;
@@ -106,16 +107,16 @@ grant select, update, delete, insert on bet_enclosures to bookmaker;
 create or replace function is_achieved(condition text, result int) returns boolean as
 $$
 	begin
-		if result == 0 then
-			return	condition == 'X' or condition == '1X' or
-					condition == '2X' or condition == 'X1' or
-					condition == 'X2';
-		elsif result == 1 then
-			return 	condition == '1' or condition == '1X' or
-					condition == 'X1';
-		elsif result == 2 then
-			return 	condition == '2' or condition == '2X' or
-					condition == 'X2';
+		if result = 0 then
+			return	condition = 'X' or condition = '1X' or
+					condition = '2X' or condition = 'X1' or
+					condition = 'X2';
+		elsif result = 1 then
+			return 	condition = '1' or condition = '1X' or
+					condition = 'X1';
+		elsif result = 2 then
+			return 	condition = '2' or condition = '2X' or
+					condition = 'X2';
 		end if;
 	end;
 $$
@@ -124,10 +125,10 @@ language plpgsql;
 create or replace function is_main_line(condition text) returns boolean as
 $$
 	begin
-		return 	condition == '1' or condition == '2' or
-				condition == 'X' or condition == '1X' or
-				condition == '2X' or condition == 'X1' or
-				condition == 'X2';
+		return 	condition = '1' or condition = '2' or
+				condition = 'X' or condition = '1X' or
+				condition = '2X' or condition = 'X1' or
+				condition = 'X2';
 	end;
 $$
 language plpgsql;
@@ -138,22 +139,22 @@ $$
 		express_status int;
 		encl_bet record;
 	begin
-		express_status = 1;
+		express_status := 1;
 		for encl_bet in
 			select enclosure_id as id, type, condition, coefficient, status, game_id
 			from game_moves gm join bets b on enclosure_id = id
 			where bet_id = bet.id
 		loop
-			if encl_bet.game_id == game.id then
+			if encl_bet.game_id = game.id then
 				if is_main_line(encl_bet.condition) then
 					if is_achieved(encl_bet.condition, game.result) then
 						update bets set status = 1 where id = encl_bet.id;
 					else
 						update bets set status = 2 where id = encl_bet.id;
-						express_status = 2;
+						express_status := 2;
 					end if;
-				elsif express_status != 2 and encl_bet == 0 then
-					express_status = 0;
+				elsif express_status != 2 and encl_bet = 0 then
+					express_status := 0;
 				end if;
 			end if;
 		end loop;
@@ -171,8 +172,8 @@ $update_bets_status_trigger$
 	begin 
 		for bet in select * from bets
 		loop
-			if bet.type == 0 then
-				if bet.game_id == old.id then
+			if bet.type = 0 then
+				if bet.game_id = old.id then
 					if is_main_line(bet.condition) then
 						if is_achieved(bet.condition, old.result) then
 							update bets set status = 1 where id = bet.id;
@@ -182,19 +183,19 @@ $update_bets_status_trigger$
 					end if;
 				end if;
 			
-			elsif bet.type == 1 then
-				express_status = new_express_status(bet, game);
+			elsif bet.type = 1 then
+				express_status := new_express_status(bet, game);
 				if express_status != bet.status then
 					update bets set status = express_status where id = bet.id;
 				end if;
 		
-			elsif bet.type == 2 then
+			elsif bet.type = 2 then
 				for express in
 					select enclosure_id as id, type, condition, coefficient, status, game_id
 					from game_moves gm join bets b on enclosure_id = id
 					where bet_id = bet.id
 				loop
-					express_status = new_express_status(express, old);
+					express_status := new_express_status(express, old);
 					if express_status != express.status then
 						update bets set status = express_status where id = express.id;
 					end if;
@@ -214,14 +215,16 @@ execute function update_bets_status();
 create or replace function remove_next_moves() returns trigger as
 $remove_next_moves_trigger$
 	begin
-    	delete from game_moves where move_id >= old.move_id and game_id == old.game_id;
+    	delete from game_moves where move_id >= old.move_id and game_id = old.game_id;
         delete from moves where id not in (select move_id from game_moves);
+        return null;
 	end;
 $remove_next_moves_trigger$
 language plpgsql;
 
-create or replace trigger remove_next_moves_trigger
+create trigger remove_next_moves_trigger
 after delete on game_moves
+when (pg_trigger_depth() = 0)
 execute function remove_next_moves();
 
 create function weak_player_win_prob(diff int) returns real as 
@@ -352,38 +355,38 @@ $update_raitings_trigger$
         
         if (raiting1 > raiting2) then
             select weak_player_win_prob(raiting1 - raiting2) into prob2;
-            prob1 = 1.0 - prob2;
+            prob1 := 1.0 - prob2;
         else
             select weak_player_win_prob(raiting2 - raiting1) into prob1;
-            prob2 = 1.0 - prob1;
+            prob2 := 1.0 - prob1;
         end if;
     
-        if new.result == 0 then
-            delta1 = 0.5 - prob1;
-            delta2 = 0.5 - prob2;
-        elsif new.result == 1 then
-            delta1 = 1 - prob1;
-            delta2 = -1 * prob2;
+        if new.result = 0 then
+            delta1 := 0.5 - prob1;
+            delta2 := 0.5 - prob2;
+        elsif new.result = 1 then
+            delta1 := 1 - prob1;
+            delta2 := -1 * prob2;
         else
-            delta1 = -1 * prob1;
-            delta2 = 1 - prob2;
+            delta1 := -1 * prob1;
+            delta2 := 1 - prob2;
         end if;
     
         if raiting1 <= 2400 then
-            raiting_delta1 = delta1 * 20;
+            raiting_delta1 := delta1 * 20;
         else
-            raiting_delta1 = delta1 * 10;
+            raiting_delta1 := delta1 * 10;
         end if;
         if raiting2 <= 2400 then
-            raiting_delta2 = delta2 * 20;
+            raiting_delta2 := delta2 * 20;
         else
-            raiting_delta2 = delta2 * 10;
+            raiting_delta2 := delta2 * 10;
         end if;
         if raiting_delta1 > 700 then
-            raiting_delta1 = 700;
+            raiting_delta1 := 700;
         end if;
         if raiting_delta2 > 700 then
-            raiting_delta2 = 700;
+            raiting_delta2 := 700;
         end if;
         update players set raiting = raiting + raiting_delta1 where id = new.first_player_id;
         update players set raiting = raiting + raiting_delta2 where id = new.second_player_id;

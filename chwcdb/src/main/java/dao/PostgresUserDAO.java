@@ -124,7 +124,7 @@ public class PostgresUserDAO implements IDAO<User>
             );
             
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {
@@ -196,7 +196,7 @@ public class PostgresUserDAO implements IDAO<User>
             );
 
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }
         catch (SQLException e)
         {

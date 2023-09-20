@@ -131,7 +131,7 @@ create table if not exists players
 	\begin{lstlisting}[label=moves_lst,caption=Описание сущности moves,language=Caml]
 create table if not exists moves
 (
-    id int primary key,
+    id int serial primary key,
     figure int not null check (figure >= 0 and figure <= 5),
     start_cell text not null check (start_cell != ''),
     end_cell text not null check (end_cell != '')
@@ -202,14 +202,16 @@ alter table bet_enclosures add constraint enclosure_id check (bet_id != enclosur
 create or replace function remove_next_moves() returns trigger as
   $remove_next_moves_trigger$
     begin
-      delete from game_moves where move_id >= old.move_id and game_id == old.game_id;
+      delete from game_moves where move_id >= old.move_id and game_id = old.game_id;
       delete from moves where id not in (select move_id from game_moves);
+      return null;
     end;
   $remove_next_moves_trigger$
 language plpgsql;
 
-create or replace trigger remove_next_moves_trigger
+create trigger remove_next_moves_trigger
 after delete on game_moves
+when (pg_trigger_depth() = 0)
 execute function remove_next_moves();
 	\end{lstlisting}
 \end{figure}
@@ -224,8 +226,8 @@ create or replace function update_bets_status() returns trigger as
       begin 
         for bet in select * from bets
           loop
-            if bet.type == 0 then
-              if bet.game_id == old.id then
+            if bet.type = 0 then
+              if bet.game_id = old.id then
                 if is_main_line(bet.condition) then
                   if is_achieved(bet.condition, old.result) then
                     update bets set status = 1 where id = bet.id;
@@ -234,18 +236,18 @@ create or replace function update_bets_status() returns trigger as
                   end if;
                 end if;
               end if;
-            elsif bet.type == 1 then
-              express_status = new_express_status(bet, game);
+            elsif bet.type = 1 then
+              express_status := new_express_status(bet, game);
               if express_status != bet.status then
                 update bets set status = express_status where id = bet.id;
               end if;
-            elsif bet.type == 2 then
+            elsif bet.type = 2 then
               for express in
                 select enclosure_id as id, type, condition, coefficient, status, game_id
                 from game_moves gm join bets b on enclosure_id = id
                 where bet_id = bet.id
               loop
-                express_status = new_express_status(express, old);
+                express_status := new_express_status(express, old);
                 if express_status != express.status then
                   update bets set status = express_status where id = express.id;
                 end if;
@@ -283,33 +285,33 @@ create or replace function update_raitings() returns trigger as
       select raiting into raiting2 from players where id = new.second_player_id;
       if (raiting1 > raiting2) then
         select weak_player_win_prob(raiting1 - raiting2) into prob2;
-        prob1 = 1.0 - prob2;
+        prob1 := 1.0 - prob2;
       else
         select weak_player_win_prob(raiting2 - raiting1) into prob1;
-        prob2 = 1.0 - prob1;
+        prob2 := 1.0 - prob1;
       end if;
-      if new.result == 0 then
-        delta1 = 0.5 - prob1;
-        delta2 = 0.5 - prob2;
-      elsif new.result == 1 then
-        delta1 = 1 - prob1;
-        delta2 = -1 * prob2;
+      if new.result = 0 then
+        delta1 := 0.5 - prob1;
+        delta2 := 0.5 - prob2;
+      elsif new.result = 1 then
+        delta1 := 1 - prob1;
+        delta2 := -1 * prob2;
       else
-        delta1 = -1 * prob1;
-        delta2 = 1 - prob2;
+        delta1 := -1 * prob1;
+        delta2 := 1 - prob2;
       end if;
       if raiting1 <= 2400 then
-        raiting_delta1 = delta1 * 20;
+        raiting_delta1 := delta1 * 20;
       else
-        raiting_delta1 = delta1 * 10;
+        raiting_delta1 := delta1 * 10;
       end if;
       if raiting2 <= 2400 then
-        raiting_delta2 = delta2 * 20;
+        raiting_delta2 := delta2 * 20;
       else
-        raiting_delta2 = delta2 * 10;
+        raiting_delta2 := delta2 * 10;
       end if;
       if raiting_delta1 > 700 then
-        raiting_delta1 = 700;
+        raiting_delta1 := 700;
       end if;
 	\end{lstlisting}
 \end{figure}
@@ -353,6 +355,7 @@ grant select, update, delete, insert on games to administrator;
 grant select, update, delete, insert on moves to administrator;
 grant select, update, delete, insert on players to administrator;
 grant select, update, delete, insert on referees to administrator;
+grant select, update, delete, insert on users to administrator;
 	\end{lstlisting}
 \end{figure}
 \begin{figure}[H]
@@ -372,5 +375,37 @@ grant select, update, delete, insert on bets to bookmaker;
 grant select, update, delete, insert on bet_enclosures to bookmaker;
 	\end{lstlisting}
 \end{figure}
+
+\section{Пользовательский интерфейс}
+
+На рисунках~\ref{unauthorized_ui}--\ref{bookmaker_ui} представлен графический пользовательский интерфейс приложения.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{unauthorized_ui}
+	\caption{Графический интерфейс неавторизованного пользователя}
+	\label{unauthorized_ui}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{admin_ui}
+	\caption{Графический интерфейс администратора}
+	\label{admin_ui}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{spectator_ui}
+	\caption{Графический интерфейс наблюдателя}
+	\label{spectator_ui}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{bookmaker_ui}
+	\caption{Графический интерфейс букмекер}
+	\label{bookmaker_ui}
+\end{figure}
+
+\section*{Вывод}
+
+В технологическом разделе были проанализированы и выбраны средства реализации приложения и базы данных. Были описаны триггеры, пользователи и ограничения целостности базы данных. Был разработан графический пользовательский интерфейс приложения.
 
 \clearpage
