@@ -1,29 +1,23 @@
 package logger;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Instant;
 
-import org.influxdb.InfluxDB;
-import org.influxdb.dto.Point;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.write.*;
 
 import logger.level.LogLevel;
 
 public class InfluxLogger implements ILogger
 {
-    private InfluxDB influxDB;
     private LogLevel level = LogLevel.OFF;
     private Class<?> clazz;
+    private WriteApiBlocking writeApi;
 
-    public InfluxLogger(
-        final InfluxDB influxDB,
-        final Integer batchSize,
-        final Integer batchDuration
-    )
+    public InfluxLogger(final InfluxDBClient influxDB)
     {
-        this.influxDB = influxDB;
-
-        influxDB.setRetentionPolicy("defaultPolicy");
-        influxDB.setDatabase("logs");
-        influxDB.enableBatch(batchSize, batchDuration, TimeUnit.MILLISECONDS);
+        writeApi = influxDB.getWriteApiBlocking();
     }
 
     @Override
@@ -41,12 +35,11 @@ public class InfluxLogger implements ILogger
     void sendLog(String text)
     {
         var point = Point.measurement("memory")
-                        .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                         .addField("class", clazz.getSimpleName()) 
                         .addField("text", text)
-                        .build();
+                        .time(Instant.now().toEpochMilli(), WritePrecision.MS);
 
-        influxDB.write(point);
+        writeApi.writePoint(point);
     }
 
     @Override

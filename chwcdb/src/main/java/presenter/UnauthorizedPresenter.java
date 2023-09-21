@@ -53,8 +53,8 @@ public class UnauthorizedPresenter implements IPresenter
                 "Authentication failed"
             );
 
-        view.closeWindow();
         regulator.changeUser(optUser.get().getRole());
+        view.closeWindow();
     }
 
     @Override

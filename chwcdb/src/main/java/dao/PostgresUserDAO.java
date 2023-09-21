@@ -69,8 +69,9 @@ public class PostgresUserDAO implements IDAO<User>
             }
 
             String query = String.format(
-                "select * from users where login = '%s';",
-                entity.getLogin()
+                "select * from users where login = '%s' and hashed_pswd = '%s';",
+                entity.getLogin(),
+                entity.getHashedPassword()
             );
             
             Statement statement = connection.createStatement();

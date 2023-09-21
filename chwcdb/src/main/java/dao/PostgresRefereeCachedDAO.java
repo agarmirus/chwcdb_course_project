@@ -102,7 +102,8 @@ public class PostgresRefereeCachedDAO extends PostgresRefereeDAO
 
         var options = LocalCachedMapOptions.<String, String>defaults()
                         .writer(mapWriter)
-                        .writeMode(WriteMode.WRITE_THROUGH);
+                        .writeMode(WriteMode.WRITE_THROUGH)
+                        .timeToLive(ttl, TimeUnit.MILLISECONDS);
         cache = client.getMapCache("cache", options);
 
         this.ttl = ttl;

@@ -304,8 +304,8 @@ public class SpectatorPresenter implements IPresenter
     void signOut() throws Exception
     {
         taskQueue.clear();
-        view.closeWindow();
         regulator.changeUser();
+        view.closeWindow();
     }
 
     @Override

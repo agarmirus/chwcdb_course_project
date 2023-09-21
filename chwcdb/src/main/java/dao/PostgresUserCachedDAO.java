@@ -77,7 +77,8 @@ public class PostgresUserCachedDAO extends PostgresUserDAO
 
                     var jsonObject = new JSONObject();
 
-                    jsonObject.put("role", result.getRole().name());
+                    jsonObject.put("hashedPswd", result.getHashedPassword());
+                    jsonObject.put("role", result.getRole().ordinal());
 
                     return jsonObject.toString();
                 }
@@ -146,7 +147,8 @@ public class PostgresUserCachedDAO extends PostgresUserDAO
         var options = LocalCachedMapOptions.<String, String>defaults()
                         .writer(mapWriter)
                         .writeMode(WriteMode.WRITE_THROUGH)
-                        .loader(mapLoader);
+                        .loader(mapLoader)
+                        .timeToLive(ttl, TimeUnit.MILLISECONDS);
         cache = client.getMapCache("cache", options);
 
         this.ttl = ttl;
@@ -182,17 +184,18 @@ public class PostgresUserCachedDAO extends PostgresUserDAO
                     "PostgresUserCachedDAO.get(User): no connection to data base"
                 );
             }
-
+            System.out.println(cache.readAllKeySet());
             String key = String.format("user:%s", entity.getLogin());
-            String value = cache.get(key);
 
-            if (value == null)
-                return Optional.empty();
+            String value = cache.get(key);
 
             JSONObject jsonObject = new JSONObject(value);
 
+            if (value == null || !entity.getHashedPassword().equals(jsonObject.getString("hashedPswd")))
+                return Optional.empty();
+
             var user = new User(
-                jsonObject.getString("login"),
+                entity.getLogin(),
                 null,
                 UserRole.values()[jsonObject.getInt("role")]
             );
@@ -242,7 +245,6 @@ public class PostgresUserCachedDAO extends PostgresUserDAO
 
             JSONObject jsonObject = new JSONObject();
 
-            jsonObject.put("login", entity.getLogin());
             jsonObject.put("hashedPswd", entity.getHashedPassword());
             jsonObject.put("role", entity.getRole().ordinal());
 

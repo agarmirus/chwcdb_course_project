@@ -405,7 +405,7 @@ public class AdminViewLogDecorator extends IView
     {
         logger.info("showing info dialog window");
 
-        view.closeWindow();
+        view.showInfoDialog(text);
     }
 
     @Override
@@ -413,6 +413,6 @@ public class AdminViewLogDecorator extends IView
     {
         logger.info("showing error dialog window");
 
-        view.closeWindow();
+        view.showErrorDialog(text);
     }
 }

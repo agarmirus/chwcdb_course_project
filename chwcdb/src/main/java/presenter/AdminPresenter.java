@@ -370,8 +370,8 @@ public class AdminPresenter implements IPresenter
     void signOut() throws Exception
     {
         taskQueue.clear();
-        view.closeWindow();
         regulator.changeUser();
+        view.closeWindow();
     }
 
     void test()

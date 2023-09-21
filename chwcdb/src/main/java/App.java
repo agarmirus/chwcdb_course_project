@@ -1,12 +1,13 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDBFactory;
 import org.json.JSONObject;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
+
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
 
 import logger.ILogger;
 import logger.InfluxLogger;
@@ -71,23 +72,22 @@ public class App
             String influxConnString = configJSONObject.getString("influxConn");
             Boolean cached = configJSONObject.getBoolean("cached");
 
-            long ttl = configJSONObject.getLong("ttl"); ////////////
+            long ttl = 0;
 
             if (cached)
                 ttl = configJSONObject.getLong("ttl");
             
-            // InfluxDB influx = InfluxDBFactory.connect(influxConnString, "logger", "logger");
+            InfluxDBClient influx = InfluxDBClientFactory.create(influxConnString, "chwcdb-token".toCharArray(), "chwcdb-org", "chwcdb-bucket");
 
-            // ILogger logger = new InfluxLogger(influx, 100, 200);
-            // setLogLevel(logger, logLevelString);
+            ILogger logger = new InfluxLogger(influx);
+            setLogLevel(logger, logLevelString);
 
             var config = new Config();
             config.useSingleServer().setAddress(redisConnString);
 
             RedissonClient redisClient = Redisson.create(config);
 
-            // new Regulator(connString, redisClient, influx, cached, ttl, logger).changeUser();
-            new Regulator(connString, redisClient, null, cached, ttl, null).changeUser();
+            new Regulator(connString, redisClient, cached, ttl, logger).changeUser();
         }
         catch (Exception e)
         {

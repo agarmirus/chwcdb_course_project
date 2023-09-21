@@ -248,7 +248,8 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
         var options = LocalCachedMapOptions.<String, String>defaults()
                         .writer(mapWriter)
                         .writeMode(WriteMode.WRITE_THROUGH)
-                        .loader(mapLoader);
+                        .loader(mapLoader)
+                        .timeToLive(ttl, TimeUnit.MILLISECONDS);;
         cache = client.getMapCache("cache", options);
         
         this.ttl = ttl;
