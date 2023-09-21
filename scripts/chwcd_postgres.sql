@@ -122,6 +122,7 @@ $$
 			return 	condition = '2' or condition = '2X' or
 					condition = 'X2';
 		end if;
+		return false;
 	end;
 $$
 language plpgsql;
@@ -210,6 +211,8 @@ $update_bets_status_trigger$
 	end;
 $update_bets_status_trigger$
 language plpgsql;
+
+update games set duration = 320, result = 1 where id = 1;
 
 create trigger update_bets_status_trigger
 after update of result on games

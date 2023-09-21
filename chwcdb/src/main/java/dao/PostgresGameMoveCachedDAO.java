@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -34,7 +35,8 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
 {
     private Connection connection;
     private RMapCache<String, String> cache;
-    final long ttl;
+    private long ttl;
+    private boolean deleted;
 
     public PostgresGameMoveCachedDAO(
         String url,
@@ -45,6 +47,8 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
     ) throws Exception
     {
         super(url, user, pswd);
+
+        deleted = false;
 
         connection = DriverManager.getConnection(url, user, pswd);
 
@@ -64,7 +68,7 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
                     String[] keyParts = key.split(":");
 
                     Integer gameId = Integer.parseInt(keyParts[1]);
-                    Integer moveId = Integer.parseInt(keyParts[2]);
+                    Integer moveNumber = Integer.parseInt(keyParts[2]);
 
                     var jsonObject = new JSONObject();
 
@@ -73,10 +77,10 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
                         "select game_id, round, duration, g.number as number, result, date, referee_id, first_player_id, second_player_id, move_id, jm.number as move_number, figure, start_cell, end_cell, comment " +
                         "from (select game_id, move_id, figure, start_cell, end_cell, number, comment from game_moves gm join moves m on move_id = m.id) as jm " +
                         "join games g on g.id = game_id " +
-                        "where game_id = %d and move_id = %d" +
+                        "where game_id = %d and jm.number = %d" +
                         "order by move_number;",
                         gameId,
-                        moveId
+                        moveNumber
                     );
                     ResultSet resultSet = statement.executeQuery(query);
 
@@ -87,7 +91,7 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
                     jsonObject.put("duration", resultSet.getInt("duration"));
                     jsonObject.put("number", resultSet.getInt("number"));
                     jsonObject.put("result", resultSet.getInt("result"));
-                    jsonObject.put("date", resultSet.getString("date"));
+                    jsonObject.put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(((java.sql.Date)resultSet.getObject("date")).getTime())));
                     jsonObject.put("refereeId", resultSet.getInt("referee_id"));
                     jsonObject.put("firstPlayerId", resultSet.getInt("first_player_id"));
                     jsonObject.put("secondPlayerId", resultSet.getInt("second_player_id"));
@@ -96,7 +100,7 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
                     jsonObject.put("startCell", resultSet.getString("start_cell"));
                     jsonObject.put("endCell", resultSet.getString("end_cell"));
 
-                    jsonObject.put("moveNumber", resultSet.getInt("move_number"));
+                    jsonObject.put("moveNumber", moveNumber);
                     jsonObject.put("comment", resultSet.getString("comment"));
 
                     return jsonObject.toString();
@@ -117,17 +121,23 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
                 {
                     Statement statement = connection.createStatement();
 
-                    boolean deleted = false;
-
                     for (var entry: map.entrySet())
                     {
                         String[] keyParts = entry.getKey().split(":");
 
                         Integer gameId = Integer.parseInt(keyParts[1]);
+                        int keyNum = 1;
+                        String deletedKey = null;
+
+                        do
+                        {
+                            deletedKey = cache.remove(String.format("gameMove:%d:%d", gameId, keyNum++));
+                        }
+                        while (deletedKey != null);
 
                         if (!deleted)
                         {
-                            statement.executeQuery(
+                            statement.executeUpdate(
                                 String.format(
                                     "delete from game_moves where game_id = %d;",
                                     gameId
@@ -141,7 +151,7 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
 
                         ResultSet moveResultSet = statement.executeQuery(
                             String.format(
-                                "select * from moves wh ere figure = %d and start_cell = '%s' and end_cell = '%s';",
+                                "select * from moves where figure = %d and start_cell = '%s' and end_cell = '%s';",
                                 valueJSONObject.getInt("figure"),
                                 valueJSONObject.getString("startCell"),
                                 valueJSONObject.getString("endCell")
@@ -154,7 +164,7 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
                         {
                             statement.executeUpdate(
                                 String.format(
-                                    "insert into moves values (%d, '%s', '%s');",
+                                    "insert into moves values (default, %d, '%s', '%s');",
                                     valueJSONObject.getInt("figure"),
                                     valueJSONObject.getString("startCell"),
                                     valueJSONObject.getString("endCell")
@@ -163,7 +173,7 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
 
                             ResultSet createdMove = statement.executeQuery(
                                 String.format(
-                                    "select * from moves wh ere figure = %d and start_cell = '%s' and end_cell = '%s';",
+                                    "select * from moves where figure = %d and start_cell = '%s' and end_cell = '%s';",
                                     valueJSONObject.getInt("figure"),
                                     valueJSONObject.getString("startCell"),
                                     valueJSONObject.getString("endCell")
@@ -177,15 +187,25 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
                         else
                             moveId = moveResultSet.getInt("id");
                         
-                        statement.executeQuery(
-                            String.format(
-                                "insert into game_moves values (%d, %d, %d, '%s');",
-                                gameId,
-                                moveId,
-                                valueJSONObject.getInt("number"),
-                                valueJSONObject.getString("comment")
-                            )
-                        );
+                        if (valueJSONObject.has("comment"))
+                            statement.executeUpdate(
+                                String.format(
+                                    "insert into game_moves values (%d, %d, %d, '%s');",
+                                    gameId,
+                                    moveId,
+                                    valueJSONObject.getInt("number"),
+                                    valueJSONObject.getString("comment")
+                                )
+                            );
+                        else
+                            statement.executeUpdate(
+                                String.format(
+                                    "insert into game_moves values (%d, %d, %d, null);",
+                                    gameId,
+                                    moveId,
+                                    valueJSONObject.getInt("number")
+                                )
+                            );
                     }
 
                     statement.close();
@@ -273,23 +293,26 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
             if (connection.isClosed() || !connection.isValid(0))
             {
                 throw new CHWCDBDataAccessException(
-                    "PostgresGameMoveCachedDAO.delete(GameMove): no connection to data base"
+                    "PostgresGameMoveCachedDAO.get(String, String): no connection to data base"
                 );
             }
-
+            
             Integer gameId = Integer.parseInt(value);
 
             List<GameMove> result = new ArrayList<GameMove>();
 
-            var allCacheKeys = cache.readAllKeySet();
+            String valueJSONString = null;
+            int keyNumber = 1;
 
-            for (var key: allCacheKeys)
+            do
             {
-                String[] keyParts = key.split(":");
+                String key = String.format("gameMove:%d:%d", gameId, keyNumber);
 
-                if (Integer.parseInt(keyParts[1]) == gameId)
+                valueJSONString = cache.get(key);
+
+                if (valueJSONString != null)
                 {
-                    var resultJSONObject = new JSONObject(cache.get(key));
+                    var resultJSONObject = new JSONObject(valueJSONString);
 
                     var game = new Game(
                         gameId,
@@ -297,45 +320,53 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
                         resultJSONObject.getInt("duration"),
                         resultJSONObject.getInt("number"),
                         GameResult.values()[resultJSONObject.getInt("result")],
-                        new Date(((java.sql.Date)resultJSONObject.get("date")).getTime()),
+                        new SimpleDateFormat("yyyy-MM-dd").parse(resultJSONObject.getString("date")),
                         resultJSONObject.getInt("refereeId"),
                         resultJSONObject.getInt("firstPlayerId"),
                         resultJSONObject.getInt("secondPlayerId")
                     );
 
-                    var arr = resultJSONObject.getJSONArray("moves");
+                    var move = new Move(
+                        0,
+                        Figure.values()[resultJSONObject.getInt("figure")],
+                        resultJSONObject.getString("startCell"),
+                        resultJSONObject.getString("endCell")
+                    );
 
-                    for (int i = 0; i < arr.length(); ++i)
-                    {
-                        var move = new Move(
-                            arr.getJSONObject(i).getInt("id"),
-                            Figure.values()[arr.getJSONObject(i).getInt("figure")],
-                            arr.getJSONObject(i).getString("startCell"),
-                            arr.getJSONObject(i).getString("endCell")
-                        );
-
+                    if (resultJSONObject.has("comment"))
                         result.add(
                             new GameMove(
                                 game,
                                 move,
-                                arr.getJSONObject(i).getInt("moveNumber"),
-                                arr.getJSONObject(i).getString("comment")
+                                keyNumber,
+                                resultJSONObject.getString("comment")
                             )
                         );
-                    }
+                    else
+                        result.add(
+                            new GameMove(
+                                game,
+                                move,
+                                keyNumber,
+                                null
+                            )
+                        );
+                    
+                    ++keyNumber;
                 }
             }
+            while (valueJSONString != null);
 
             if (result.isEmpty())
                 return Optional.empty();
             
             return Optional.of(result);
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
             throw new CHWCDBDataAccessException(
                 String.format(
-                    "PostgresGameMoveCachedDAO.delete(GameMove): %s",
+                    "PostgresGameMoveCachedDAO.get(String, String): %s",
                     e.getMessage()
                 )
             );
@@ -355,10 +386,14 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
         {
             if (connection.isClosed() || !connection.isValid(0))
             {
+                deleted = false;
+
                 throw new CHWCDBDataAccessException(
                     "PostgresGameMoveCachedDAO.delete(GameMove): no connection to data base"
                 );
             }
+
+            deleted = false;
 
             for (var gameMove: entities)
             {
@@ -372,13 +407,17 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
                 jsonObject.put("number", gameMove.getNumber());
                 jsonObject.put("comment", gameMove.getComment());
 
-                String key = String.format("gameMove:%d:%d", game.getId(), move.getId());
+                String key = String.format("gameMove:%d:%d", game.getId(), gameMove.getNumber());
 
                 cache.put(key, jsonObject.toString(), ttl, TimeUnit.MILLISECONDS);
             }
+
+            deleted = false;
         }
         catch (SQLException e)
         {
+            deleted = false;
+
             throw new CHWCDBDataAccessException(
                 String.format(
                     "PostgresGameMoveCachedDAO.delete(GameMove): %s",
@@ -435,10 +474,9 @@ public class PostgresGameMoveCachedDAO extends PostgresGameMoveDAO
             }
             
             Integer gameId = entity.getGame().getId();
-            Integer moveId = entity.getMove().getId();
             Integer moveNumber = entity.getNumber();
 
-            String mainKey = String.format("gameMove:%d:%d", gameId, moveId);
+            String mainKey = String.format("gameMove:%d:%d", gameId, moveNumber);
 
             cache.remove(mainKey);
 

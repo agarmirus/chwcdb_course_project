@@ -245,6 +245,11 @@ public class SpectatorModel extends IModel
                     throw new CHWCDBInvalidParameterException(
                         "SpectatorModel.addMoves(List<GameMove>): move doesn't have an end cell"
                     );
+
+                if (gameMove.getNumber() < 1)
+                    throw new CHWCDBInvalidParameterException(
+                        "SpectatorModel.addMoves(List<GameMove>): move doesn't have valid number"
+                    );
             }
             
             gameMoveDAO.create(gameMoves);
@@ -303,18 +308,10 @@ public class SpectatorModel extends IModel
 
     GameMove getRemovingGameMoveFromJSON(JSONObject jsonObject) throws Exception
     {
-        if (jsonObject.has("comment"))
-            return new GameMove(
-                new Game(jsonObject.getInt("gameId")),
-                new Move(jsonObject.getInt("moveId")),
-                null,
-                null
-            );
-        
         return new GameMove(
             new Game(jsonObject.getInt("gameId")),
-            new Move(jsonObject.getInt("moveId")),
-            null,
+            new Move(),
+            jsonObject.getInt("moveNumber"),
             null
         );
     }

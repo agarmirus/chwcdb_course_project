@@ -71,7 +71,7 @@ public class App
             String influxConnString = configJSONObject.getString("influxConn");
             Boolean cached = configJSONObject.getBoolean("cached");
 
-            long ttl = 0;
+            long ttl = configJSONObject.getLong("ttl"); ////////////
 
             if (cached)
                 ttl = configJSONObject.getLong("ttl");

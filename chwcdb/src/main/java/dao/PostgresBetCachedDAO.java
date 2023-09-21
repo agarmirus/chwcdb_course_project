@@ -50,8 +50,9 @@ public class PostgresBetCachedDAO extends PostgresBetDAO
                 try
                 {
                     PreparedStatement betsPreparedStatement = connection.prepareStatement(
-                        "insert into bets values (?, ?, ?, ?, ?, ?) on conflict (login) do udpate set status = ?"
+                        "insert into bets values (?, ?, ?, ?, ?, ?) on conflict (id) do update set status = ?"
                     );
+
                     PreparedStatement enclBetsPlPreparedStatement = null;
 
                     for (var entry: map.entrySet())
@@ -60,10 +61,17 @@ public class PostgresBetCachedDAO extends PostgresBetDAO
 
                         var jsonObject = new JSONObject(entry.getValue());
                         
-                        BetType type = BetType.values()[jsonObject.getInt("type")];
+                        BetType type = null;
 
                         betsPreparedStatement.setInt(1, id);
-                        betsPreparedStatement.setInt(2, jsonObject.getInt("type"));
+
+                        if (jsonObject.has("type"))
+                        {
+                            type = BetType.values()[jsonObject.getInt("type")];
+                            betsPreparedStatement.setInt(2, jsonObject.getInt("type"));
+                        }
+                        else
+                            betsPreparedStatement.setInt(2, 0);
 
                         if (jsonObject.has("condition"))
                             betsPreparedStatement.setString(3, jsonObject.getString("condition"));
@@ -86,18 +94,18 @@ public class PostgresBetCachedDAO extends PostgresBetDAO
 
                         betsPreparedStatement.addBatch();
 
-                        if (type != BetType.ELEMENTARY)
+                        if (type != null && type != BetType.ELEMENTARY)
                         {
                             if (enclBetsPlPreparedStatement == null)
                                 enclBetsPlPreparedStatement = connection.prepareStatement(
-                                    "insert into bet_enclosures values (?, ?) on conflict (game_id, enclosure_id) do nothing"
+                                    "insert into bet_enclosures values (?, ?)"
                                 );
                             
                             var arr = jsonObject.getJSONArray("bets");
 
                             for (int i = 0; i < arr.length(); ++i)
                             {
-                                enclBetsPlPreparedStatement.setInt(1, jsonObject.getInt("id"));
+                                enclBetsPlPreparedStatement.setInt(1, id);
                                 enclBetsPlPreparedStatement.setInt(2, arr.getJSONObject(i).getInt("id"));
 
                                 enclBetsPlPreparedStatement.addBatch();

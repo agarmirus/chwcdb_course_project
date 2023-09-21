@@ -228,11 +228,11 @@ public class SpectatorPresenter implements IPresenter
                 "Enter game ID"
             );
 
-        Integer moveId = view.getMoveId();
+        Integer moveNumber = view.getMoveNumber();
 
-        if (moveId == null)
+        if (moveNumber == null)
             throw new CHWCDBInvalidInputException(
-                "Enter move ID"
+                "Enter move number"
             );
 
         var jsonObject = new JSONObject();
@@ -240,7 +240,7 @@ public class SpectatorPresenter implements IPresenter
         jsonObject.put("op", "remove");
         jsonObject.put("type", "gameMove");
         jsonObject.put("gameId", gameId);
-        jsonObject.put("moveId", moveId);
+        jsonObject.put("moveNumber", moveNumber);
 
         taskQueue.add(jsonObject.toString());
 

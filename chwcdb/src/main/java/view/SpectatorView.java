@@ -48,7 +48,7 @@ public class SpectatorView extends IView {
 		gameMovesTable = new JTable();
 		signOutButton = new JButton();
 		label10 = new JLabel();
-		moveIdSpinner = new JSpinner();
+		moveNumberSpinner = new JSpinner();
 		removeMoveButton = new JButton();
 		scrollPane2 = new JScrollPane();
 		movesTextArea = new JTextArea();
@@ -133,7 +133,7 @@ public class SpectatorView extends IView {
 		signOutButton.setText("Sign Out");
 
 		//---- label10 ----
-		label10.setText("Move ID:");
+		label10.setText("Move number:");
 
 		//---- removeMoveButton ----
 		removeMoveButton.setText("Remove Move");
@@ -199,7 +199,7 @@ public class SpectatorView extends IView {
 								.addGroup(contentPaneLayout.createSequentialGroup()
 									.addComponent(label10)
 									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-									.addComponent(moveIdSpinner, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
+									.addComponent(moveNumberSpinner, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
 								.addGroup(contentPaneLayout.createSequentialGroup()
 									.addGap(14, 14, 14)
 									.addComponent(removeMoveButton)))
@@ -270,7 +270,7 @@ public class SpectatorView extends IView {
 									.addGap(28, 28, 28)
 									.addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 										.addComponent(label10)
-										.addComponent(moveIdSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+										.addComponent(moveNumberSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 									.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 									.addComponent(removeMoveButton)))
 							.addGap(0, 21, Short.MAX_VALUE)))
@@ -310,7 +310,7 @@ public class SpectatorView extends IView {
 	private JTable gameMovesTable;
 	private JButton signOutButton;
 	private JLabel label10;
-	private JSpinner moveIdSpinner;
+	private JSpinner moveNumberSpinner;
 	private JButton removeMoveButton;
 	private JScrollPane scrollPane2;
 	private JTextArea movesTextArea;
@@ -414,9 +414,9 @@ public class SpectatorView extends IView {
 	}
 
 	@Override
-	public Integer getMoveId()
+	public Integer getMoveNumber()
 	{
-		return (Integer)moveIdSpinner.getValue();
+		return (Integer)moveNumberSpinner.getValue();
 	}
 
 	boolean checkChessPosition(String position)

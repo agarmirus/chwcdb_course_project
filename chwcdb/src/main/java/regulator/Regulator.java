@@ -92,8 +92,8 @@ public class Regulator implements IRegulator
                 // );
                 model =
                     new SpectatorModel(
-                        new PostgresGameDAO(connStr, "spectator", "spectator"),
-                        new PostgresGameMoveDAO(connStr, "spectator", "spectator"),
+                        new PostgresGameCachedDAO(connStr, "spectator", "spectator", client, ttl),
+                        new PostgresGameMoveCachedDAO(connStr, "spectator", "spectator", client, ttl),
                         client
                     );
 
@@ -133,8 +133,8 @@ public class Regulator implements IRegulator
                 // );
                 model =
                     new BookmakerModel(
-                        new PostgresGameMoveDAO(connStr, "bookmaker", "bookmaker"),
-                        new PostgresBetDAO(connStr, "bookmaker", "bookmaker"),
+                        new PostgresGameMoveCachedDAO(connStr, "bookmaker", "bookmaker", client, ttl),
+                        new PostgresBetCachedDAO(connStr, "bookmaker", "bookmaker", client, ttl),
                         client
                     );
             }
@@ -183,12 +183,12 @@ public class Regulator implements IRegulator
                 // );
                 model = 
                     new AdminModel(
-                        new PostgresGameDAO(connStr, "administrator", "administrator"),
-                        new PostgresGameMoveDAO(connStr, "administrator", "administrator"),
-                        new PostgresBetDAO(connStr, "administrator", "administrator"),
-                        new PostgresPlayerDAO(connStr, "administrator", "administrator"),
-                        new PostgresUserDAO(connStr, "administrator", "administrator"),
-                        new PostgresRefereeDAO(connStr, "administrator", "administrator"),
+                        new PostgresGameCachedDAO(connStr, "administrator", "administrator", client, ttl),
+                        new PostgresGameMoveCachedDAO(connStr, "administrator", "administrator", client, ttl),
+                        new PostgresBetCachedDAO(connStr, "administrator", "administrator", client, ttl),
+                        new PostgresPlayerCachedDAO(connStr, "administrator", "administrator", client, ttl),
+                        new PostgresUserCachedDAO(connStr, "administrator", "administrator", client, ttl),
+                        new PostgresRefereeCachedDAO(connStr, "administrator", "administrator", client, ttl),
                         client
                 );
             }

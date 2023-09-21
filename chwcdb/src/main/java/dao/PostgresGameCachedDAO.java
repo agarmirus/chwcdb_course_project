@@ -82,7 +82,10 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
                     jsonObject.put("duration", result.getDuration());
                     jsonObject.put("number", result.getNumber());
                     jsonObject.put("result", result.getResult().ordinal());
-                    jsonObject.put("date", new SimpleDateFormat("yyyy-MM-dd").format(result.getDate()));
+
+                    if (result.getDate() != null)
+                        jsonObject.put("date", new SimpleDateFormat("yyyy-MM-dd").format(result.getDate()));
+                        
                     jsonObject.put("refereeId", result.getRefereeId());
                     jsonObject.put("firstPlayerId", result.getFirstPlayerId());
                     jsonObject.put("secondPlayerId", result.getSecondPlayerId());
@@ -103,7 +106,7 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
             {
                 try
                 {
-                    PreparedStatement preparedStatement = connection.prepareStatement("insert into games values (?, ?, ?, ?, ?, ?, ?, ?, ?) on conflict (id) update result = ?, duration = ?");
+                    Statement statement = connection.createStatement();
 
                     for (var entry: map.entrySet())
                     {
@@ -111,26 +114,35 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
 
                         var jsonObject = new JSONObject(entry.getValue());
 
-                        preparedStatement.setInt(1, id);
-                        preparedStatement.setInt(2, jsonObject.getInt("round"));
-                        preparedStatement.setInt(3, jsonObject.getInt("duration"));
-                        preparedStatement.setInt(4, jsonObject.getInt("number"));
-                        preparedStatement.setInt(4, jsonObject.getInt("result"));
-                        preparedStatement.setString(5, jsonObject.getString("date"));
-                        preparedStatement.setInt(6, jsonObject.getInt("refereeId"));
-                        preparedStatement.setInt(7, jsonObject.getInt("firstPlayerId"));
-                        preparedStatement.setInt(8, jsonObject.getInt("secondPlayerId"));
-                        preparedStatement.setInt(9, jsonObject.getInt("result"));
-                        preparedStatement.setInt(10, jsonObject.getInt("duration"));
-
-                        preparedStatement.addBatch();
+                        if (jsonObject.has("result"))
+                            statement.executeUpdate(
+                                String.format(
+                                    "update games set duration = %d, result = %d where id = %d",
+                                    jsonObject.getInt("duration"),
+                                    jsonObject.getInt("result"),
+                                    id
+                                )
+                            );
+                        else
+                            statement.executeUpdate(
+                                String.format(
+                                    "insert into games values (%d, %d, null, %d, null, '%s', %d, %d, %d)",
+                                    id,
+                                    jsonObject.getInt("round"),
+                                    jsonObject.getInt("number"),
+                                    jsonObject.getString("date"),
+                                    jsonObject.getInt("refereeId"),
+                                    jsonObject.getInt("firstPlayerId"),
+                                    jsonObject.getInt("secondPlayerId")
+                                )
+                            );
                     }
 
-                    preparedStatement.executeBatch();
-                    preparedStatement.close();
+                    statement.close();
                 }
                 catch (Exception e)
                 {
+                    System.out.println(e.getMessage());
                     return;
                 }
             }
@@ -333,17 +345,11 @@ public class PostgresGameCachedDAO extends PostgresGameDAO
 
             JSONObject jsonObject = new JSONObject();
 
-            jsonObject.put("round", entity.getRound());
             jsonObject.put("duration", entity.getDuration());
-            jsonObject.put("number", entity.getNumber());
             jsonObject.put("result", entity.getResult().ordinal());
-            jsonObject.put("date", new SimpleDateFormat("yyyy-MM-dd").format(entity.getDate()));
-            jsonObject.put("refereeId", entity.getRefereeId());
-            jsonObject.put("firstPlayerId", entity.getFirstPlayerId());
-            jsonObject.put("secondPlayerId", entity.getSecondPlayerId());
 
-            for (var update: updates)
-                jsonObject.put(update.getKey(), update.getValue());
+            // for (var update: updates)
+            //     jsonObject.put(update.getKey(), update.getValue());
 
             cache.put(key, jsonObject.toString(), ttl, TimeUnit.MILLISECONDS);
         }

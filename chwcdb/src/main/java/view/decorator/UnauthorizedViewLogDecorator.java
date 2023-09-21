@@ -377,11 +377,11 @@ public class UnauthorizedViewLogDecorator extends IView
     }
 
     @Override
-	public Integer getMoveId()
+	public Integer getMoveNumber()
     {
-        logger.info("getting move ID");
+        logger.info("getting move number");
 
-        return view.getMoveId();
+        return view.getMoveNumber();
     }
 
     @Override
