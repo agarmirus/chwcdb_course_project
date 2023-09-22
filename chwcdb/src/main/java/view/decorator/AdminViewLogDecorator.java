@@ -415,4 +415,12 @@ public class AdminViewLogDecorator extends IView
 
         view.showErrorDialog(text);
     }
+
+    @Override
+    public void setTestResult(final long result)
+    {
+        logger.info("setting test result");
+
+        view.setTestResult(result);
+    }
 }

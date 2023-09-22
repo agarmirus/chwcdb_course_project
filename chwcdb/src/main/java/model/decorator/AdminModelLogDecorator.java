@@ -332,4 +332,11 @@ public class AdminModelLogDecorator extends IModel
             throw e;
         }
     }
+
+    @Override
+    public long runTest()
+    {
+        logger.info("running test");
+        return model.runTest();
+    }
 }

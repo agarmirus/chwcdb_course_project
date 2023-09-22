@@ -3,6 +3,7 @@ package model;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 import org.redisson.api.RQueue;
@@ -402,6 +403,37 @@ public class AdminModel extends IModel
                 performTask(task);
             
             task = taskQueue.poll();
+        }
+    }
+
+    @Override
+    public long runTest()
+    {
+        try
+        {
+            int queriesCount = 1000;
+            int delay = 50;
+
+            long totalTime = 0;
+
+            for (int i = 0; i < queriesCount; ++i)
+            {
+                int gameId = (int)((Math.random() * (100 - 1)) + 1);
+
+                long start = System.nanoTime();
+                gameMoveDAO.get("game_id", Integer.toString(gameId));
+                long end = System.nanoTime();
+
+                totalTime += end - start;
+
+                TimeUnit.MICROSECONDS.sleep(delay);
+            }
+
+            return totalTime / queriesCount;
+        }
+        catch (Exception e)
+        {
+            return 0;
         }
     }
 }

@@ -614,18 +614,6 @@ public class AdminView extends IView {
 	@Override
 	public void setPresenterListener(final IPresenter listener)
 	{
-		removeGameButton.setActionCommand("removegame");
-		gameInfoButton.setActionCommand("gameinfo");
-		signOutButton.setActionCommand("signout");
-		removeBetButton.setActionCommand("removebet");
-		addPlayerButton.setActionCommand("addplayer");
-		removePlayerButton.setActionCommand("removeplayer");
-		addRefereeButton.setActionCommand("addreferee");
-		removeRefereeButton.setActionCommand("removereferee");
-		addUserButton.setActionCommand("adduser");
-		removeUserButton.setActionCommand("removeuser");
-		testButton.setActionCommand("test");
-		
 		removeAllButtonListeners(removeGameButton);
 		removeAllButtonListeners(gameInfoButton);
 		removeAllButtonListeners(signOutButton);
@@ -888,5 +876,11 @@ public class AdminView extends IView {
 	public void setGameResult(final GameResult result)
 	{
 		resultBox.setSelectedIndex(result.ordinal());
+	}
+
+	@Override
+	public void setTestResult(final long result)
+	{
+		testResultField.setText(Long.toString(result));
 	}
 }

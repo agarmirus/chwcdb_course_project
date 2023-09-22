@@ -33,5 +33,5 @@ public abstract class IModel
 
     public void runTaskQueue() throws CHWCDBException {}
 
-    public void runTest() {}
+    public long runTest() { return 0; }
 }

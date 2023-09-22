@@ -418,3 +418,13 @@ from
 join games g on g.id = game_id
 where game_id = 1
 order by move_number;
+
+do
+$$
+    begin
+        for i in 3..100
+        loop
+            insert into games values (i, 1, 120, 1, 0, '2001-12-12', 1, 1, 2);
+        end loop;
+    end;
+$$

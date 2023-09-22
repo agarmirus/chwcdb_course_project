@@ -2,9 +2,7 @@
 
 \section{Выбор средств реализации}
 
-Для реализации приложения был выбран высокоуровненый язык Java, поскольку он поддерживает объектно-ориентированную парадигму программирования и позволяет писать приложения, запускаемые в любой системе с помощью виртуальной Java-машины~\cite{java}.
-
-Для хранения информации, связанной с предметной областью, будет использована клиент-серверная СУБД. В таблице~\ref{dms_comp} представлен сравнительный анализ наиболее популярных клиент-серверных СУБД.
+Для реализации приложения был выбран высокоуровненый язык Java~\cite{java}. В таблице~\ref{dms_comp} представлен сравнительный анализ наиболее популярных клиент-серверных СУБД, необходимых для работы с информацией, связанной с предметной областью.
 
 \begin{center}
 	\begin{threeparttable}
@@ -33,7 +31,7 @@
 
 Для работы с базой данных была выбрана система PostgreSQL, поскольку она имеет открытый исходный код, доступна под наиболее популярные операционные системы и имеет поддержку триггеров.
 
-Приложение должно обеспечивать хранение логов в отдельной базе данных. В качестве СУБД будет использована СУБД временных рядов, поскольку, в отличие от других систем, она оптимизирована для быстрого приема запросов: скорость загрузки данных не уменьшается со временем и остается стабильной~\cite{timedb}. В таблице~\cite{time_dms_comp} представлен сравнительный анализ наиболее популярных СУБД временных рядов.
+Приложение должно обеспечивать хранение логов в отдельной базе данных. В качестве СУБД будет использована СУБД временных рядов, поскольку, в отличие от других систем, она оптимизирована для быстрого приема запросов: скорость загрузки данных не уменьшается со временем и остается стабильной~\cite{timedb}. В таблице~\ref{time_dms_comp} представлен сравнительный анализ наиболее популярных СУБД временных рядов.
 
 \begin{center}
 	\begin{threeparttable}
@@ -60,7 +58,7 @@
 
 Для логирования была выбрана СУБД InfluxDB, поскольку она является клиент-серверной и поддерживает такие типы данных, как числа и строки. Для логирования СУБД PostgreSQL в InfluxDB был выбран плагин Telegraf~\cite{telegraf}.
 
-В качестве СУБД для кэширования информации и организации очереди запросов предлагается использовать встраиваемые системы <<ключ-значение>>. В таблице~\ref{in_dms_comp} представлен сравнительный анализ наиболее популярных встраиваемых СУЬД <<ключ-значение>>.
+В качестве СУБД для кэширования информации и организации очереди запросов предлагается использовать встраиваемые системы <<ключ-значение>>. В таблице~\ref{in_dms_comp} представлен сравнительный анализ наиболее популярных встраиваемых СУБД <<ключ-значение>>.
 
 \begin{center}
 	\begin{threeparttable}
@@ -163,7 +161,7 @@ create table if not exists bets
 (
     id int primary key,
     type int not null check (type >= 0 and type <= 2),
-    condition text check (condition = ''),
+    condition text check (condition != ''),
     coefficient real check (coefficient > 1),
     status int not null check (status >= 0 and status <= 2),
     game_id int references games (id) on delete cascade
@@ -198,7 +196,7 @@ alter table bet_enclosures add constraint enclosure_id check (bet_id != enclosur
 
 В листингах~\ref{remove_next_moves_lst}--\ref{update_raitings_lst2} представлены реализованные триггеры и функции, необходимые для их выполнения.
 \begin{figure}[H]
-	\begin{lstlisting}[label=remove_next_moves_lst,caption=Триггер удаления ходов из шхатманой партии,language=Caml]
+	\begin{lstlisting}[label=remove_next_moves_lst,caption=Триггер удаления ходов из шахматной партии,language=Caml]
 create or replace function remove_next_moves() returns trigger as
   $remove_next_moves_trigger$
     begin
@@ -211,6 +209,7 @@ language plpgsql;
 
 create trigger remove_next_moves_trigger
 after delete on game_moves
+for each row
 when (pg_trigger_depth() = 0)
 execute function remove_next_moves();
 	\end{lstlisting}
@@ -237,7 +236,7 @@ create or replace function update_bets_status() returns trigger as
                 end if;
               end if;
             elsif bet.type = 1 then
-              express_status := new_express_status(bet, game);
+              express_status := new_express_status(bet, old);
               if express_status != bet.status then
                 update bets set status = express_status where id = bet.id;
               end if;
@@ -365,6 +364,10 @@ grant select on referees, players to spectator;
 grant select, update, delete, insert on games to spectator;
 grant select, update, delete, insert on moves to spectator;
 grant select, update, delete, insert on game_moves to spectator;
+grant select, update on bets to spectator;
+grant select on bet_enclosures to spectator;
+grant update on players to spectator;
+grant usage, select on sequence moves_id_seq to spectator;
 	\end{lstlisting}
 \end{figure}
 \begin{figure}[H]
@@ -406,6 +409,6 @@ grant select, update, delete, insert on bet_enclosures to bookmaker;
 
 \section*{Вывод}
 
-В технологическом разделе были проанализированы и выбраны средства реализации приложения и базы данных. Были описаны триггеры, пользователи и ограничения целостности базы данных. Был разработан графический пользовательский интерфейс приложения.
+В технологическом разделе были проанализированы и выбраны средства реализации приложения и базы данных. Были реализованы триггеры, пользователи и ограничения целостности базы данных. Был разработан графический пользовательский интерфейс приложения.
 
 \clearpage

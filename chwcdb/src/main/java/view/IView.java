@@ -76,6 +76,8 @@ public abstract class IView extends JFrame
 	public void setGameDuration(final Integer duration) {}
 	public void setGameResult(final GameResult result) {}
 
+	public void setTestResult(final long result) {}
+
 	public Integer getMoveNumber() { return null; }
 	public List<GameMove> getMoves() { return null; }
 

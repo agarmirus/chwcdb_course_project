@@ -375,7 +375,10 @@ public class AdminPresenter implements IPresenter
     }
 
     void test()
-    {}
+    {
+        long result = model.runTest();
+        view.setTestResult(result);
+    }
 
     @Override
     public void actionPerformed(ActionEvent event)

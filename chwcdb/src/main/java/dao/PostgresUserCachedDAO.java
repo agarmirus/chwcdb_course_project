@@ -184,7 +184,7 @@ public class PostgresUserCachedDAO extends PostgresUserDAO
                     "PostgresUserCachedDAO.get(User): no connection to data base"
                 );
             }
-            System.out.println(cache.readAllKeySet());
+
             String key = String.format("user:%s", entity.getLogin());
 
             String value = cache.get(key);

@@ -4,5 +4,5 @@
     "influxConn": "http://127.0.0.1:8086",
     "logLevel": "all",
     "cached": true,
-    "ttl": 500
+    "ttl": 5000
 }
