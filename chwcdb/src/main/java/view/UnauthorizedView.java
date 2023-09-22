@@ -27,13 +27,13 @@ public class UnauthorizedView extends IView {
 		Container contentPane = getContentPane();
 
 		//---- label1 ----
-		label1.setText("Login");
+		label1.setText("Логин");
 
 		//---- label2 ----
-		label2.setText("Password");
+		label2.setText("Пароль");
 
 		//---- signInButton ----
-		signInButton.setText("Sign In");
+		signInButton.setText("Авторизация");
 
 		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
 		contentPane.setLayout(contentPaneLayout);

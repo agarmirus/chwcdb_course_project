@@ -73,41 +73,41 @@ public class BookmakerView extends IView {
 		removeBetButton.setActionCommand("removebet");
 
 		//---- label1 ----
-		label1.setText("Game ID:");
+		label1.setText("ID игры:");
 
 		//---- label2 ----
-		label2.setText("Round:");
+		label2.setText("Раунд:");
 
 		//---- label3 ----
-		label3.setText("Number:");
+		label3.setText("Номер:");
 
 		//---- label4 ----
-		label4.setText("Date:");
+		label4.setText("Дата:");
 
 		//---- label5 ----
-		label5.setText("Referee ID:");
+		label5.setText("ID судьи:");
 
 		//---- label6 ----
-		label6.setText("1st Player ID:");
+		label6.setText("ID 1го игрока:");
 
 		//---- label7 ----
-		label7.setText("2st Player ID:");
+		label7.setText("ID 2го игрока:");
 
 		//---- label8 ----
-		label8.setText("Duration:");
+		label8.setText("Длительность:");
 
 		//---- label9 ----
-		label9.setText("Result:");
+		label9.setText("Результат:");
 
 		//---- resultBox ----
 		resultBox.setModel(new DefaultComboBoxModel<>(new String[] {
-			"Draw",
-			"First Won",
-			"Second Won"
+			"Ничья",
+			"Победа первого",
+			"Победа второго"
 		}));
 
 		//---- gameInfoButton ----
-		gameInfoButton.setText("Get Game Info");
+		gameInfoButton.setText("Инф. об игре");
 
 		//======== scrollPane1 ========
 		{
@@ -117,7 +117,7 @@ public class BookmakerView extends IView {
 				new Object[][] {
 				},
 				new String[] {
-					"\u2116", "Figure", "Start Cell", "End Cell", "Comment"
+					"\u2116", "Фигура", "Начальная клетка", "Конечная клетка", "Комментарий"
 				}
 			) {
 				boolean[] columnEditable = new boolean[] {
@@ -132,51 +132,51 @@ public class BookmakerView extends IView {
 		}
 
 		//---- label10 ----
-		label10.setText("Bet ID:");
+		label10.setText("ID ставки:");
 
 		//---- label11 ----
-		label11.setText("Bet Type:");
+		label11.setText("Тип ставки:");
 
 		//---- betTypeBox ----
 		betTypeBox.setModel(new DefaultComboBoxModel<>(new String[] {
-			"Elementary",
-			"Express",
-			"System"
+			"Одинарная",
+			"Экспресс",
+			"Система"
 		}));
 
 		//---- label12 ----
-		label12.setText("Condition:");
+		label12.setText("Условие:");
 
 		//---- coefSpinner ----
 		coefSpinner.setModel(new SpinnerNumberModel(1.0, 1.0, null, 0.01));
 
 		//---- label13 ----
-		label13.setText("Coefficient:");
+		label13.setText("Коэффициент:");
 
 		//---- label15 ----
-		label15.setText("Enclosure Bets IDs:");
+		label15.setText("ID вложенных ставок:");
 
 		//---- label16 ----
-		label16.setText("Bet Status:");
+		label16.setText("Статус ставки:");
 
 		//---- betStatusBox ----
 		betStatusBox.setModel(new DefaultComboBoxModel<>(new String[] {
-			"None",
-			"Success",
-			"Fail"
+			"Не известно",
+			"Успех",
+			"Провал"
 		}));
 
 		//---- setBetStatusButton ----
-		setBetStatusButton.setText("Set Bet Status");
+		setBetStatusButton.setText("Установить статус");
 
 		//---- signOutButton ----
-		signOutButton.setText("Sign Out");
+		signOutButton.setText("Выйти");
 
 		//---- addBetButton ----
-		addBetButton.setText("Add Bet");
+		addBetButton.setText("Добавить ставку");
 
 		//---- removeBetButton ----
-		removeBetButton.setText("Remove Bet");
+		removeBetButton.setText("Удалить ставку");
 
 		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
 		contentPane.setLayout(contentPaneLayout);

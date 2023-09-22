@@ -68,44 +68,44 @@ public class SpectatorView extends IView {
 		signOutButton.setActionCommand("signout");
 
 		//---- label1 ----
-		label1.setText("Game ID:");
+		label1.setText("ID игры:");
 
 		//---- label2 ----
-		label2.setText("Round:");
+		label2.setText("Раунд:");
 
 		//---- label3 ----
-		label3.setText("Number:");
+		label3.setText("Номер:");
 
 		//---- label4 ----
-		label4.setText("Date:");
+		label4.setText("Дата:");
 
 		//---- label5 ----
-		label5.setText("Referee ID:");
+		label5.setText("ID судьи:");
 
 		//---- label6 ----
-		label6.setText("1st Player ID:");
+		label6.setText("ID 1го игрока:");
 
 		//---- label7 ----
-		label7.setText("2st Player ID:");
+		label7.setText("ID 2го игрока:");
 
 		//---- label8 ----
-		label8.setText("Duration:");
+		label8.setText("Длительность:");
 
 		//---- label9 ----
-		label9.setText("Result:");
+		label9.setText("Результат:");
 
 		//---- resultBox ----
 		resultBox.setModel(new DefaultComboBoxModel<>(new String[] {
-			"Draw",
-			"First Won",
-			"Second Won"
+			"Ничья",
+			"Победа первого",
+			"Победа второго"
 		}));
 
 		//---- removeGameButton ----
-		removeGameButton.setText("Remove Game");
+		removeGameButton.setText("Удалить игру");
 
 		//---- gameInfoButton ----
-		gameInfoButton.setText("Get Game Info");
+		gameInfoButton.setText("Инф. об игре");
 
 		//======== scrollPane1 ========
 		{
@@ -115,7 +115,7 @@ public class SpectatorView extends IView {
 				new Object[][] {
 				},
 				new String[] {
-					"\u2116", "Figure", "Start Cell", "End Cell", "Comment"
+					"\u2116", "Фигура", "Начальная клетка", "Конечная клетка", "Комментарий"
 				}
 			) {
 				boolean[] columnEditable = new boolean[] {
@@ -130,13 +130,13 @@ public class SpectatorView extends IView {
 		}
 
 		//---- signOutButton ----
-		signOutButton.setText("Sign Out");
+		signOutButton.setText("Выйти");
 
 		//---- label10 ----
-		label10.setText("Move number:");
+		label10.setText("Номер хода:");
 
 		//---- removeMoveButton ----
-		removeMoveButton.setText("Remove Move");
+		removeMoveButton.setText("Удалить ход");
 
 		//======== scrollPane2 ========
 		{
@@ -144,13 +144,13 @@ public class SpectatorView extends IView {
 		}
 
 		//---- addMovesButton ----
-		addMovesButton.setText("Add Moves");
+		addMovesButton.setText("Добавить ходы");
 
 		//---- addGameButton ----
-		addGameButton.setText("Add Game");
+		addGameButton.setText("Добавить игру");
 
 		//---- endGameButton ----
-		endGameButton.setText("End Game");
+		endGameButton.setText("Завершить игру");
 
 		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
 		contentPane.setLayout(contentPaneLayout);

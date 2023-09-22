@@ -2,7 +2,7 @@
 
 \section{Выбор средств реализации}
 
-Для реализации приложения был выбран высокоуровненый язык Java~\cite{java}. В таблице~\ref{dms_comp} представлен сравнительный анализ наиболее популярных клиент-серверных СУБД, необходимых для работы с информацией, связанной с предметной областью.
+Для реализации приложения был выбран высокоуровневый язык Java~\cite{java}. В таблице~\ref{dms_comp} представлен сравнительный анализ наиболее популярных клиент-серверных СУБД, необходимых для работы с информацией, связанной с предметной областью.
 
 \begin{center}
 	\begin{threeparttable}
@@ -338,7 +338,7 @@ execute function update_raitings();
 В листингах~\ref{unauthorized_lst}--\ref{bookmaker_lst} представлено описание ролевой модели на уровне базы данных.
 
 \begin{figure}[H]
-	\begin{lstlisting}[label=unauthorized_lst,caption=Описание роли неаторизованного пользователя,language=Caml]
+	\begin{lstlisting}[label=unauthorized_lst,caption=Описание роли неавторизованного пользователя,language=Caml]
 create user unauthorized with encrypted password 'unauthorized';
 grant select on users to unauthorized;
 	\end{lstlisting}

@@ -103,41 +103,41 @@ public class AdminView extends IView {
 		testButton.setActionCommand("test");
 
 		//---- label1 ----
-		label1.setText("Game ID:");
+		label1.setText("ID Игры:");
 
 		//---- label2 ----
-		label2.setText("Round:");
+		label2.setText("Раунд:");
 
 		//---- label3 ----
-		label3.setText("Number:");
+		label3.setText("Номер:");
 
 		//---- label4 ----
-		label4.setText("Date:");
+		label4.setText("Дата:");
 
 		//---- label6 ----
-		label6.setText("1st Player ID:");
+		label6.setText("ID 1го игрока:");
 
 		//---- label7 ----
-		label7.setText("2st Player ID:");
+		label7.setText("ID 2го игрока:");
 
 		//---- label8 ----
-		label8.setText("Duration:");
+		label8.setText("Длительность:");
 
 		//---- label9 ----
-		label9.setText("Result:");
+		label9.setText("Результат:");
 
 		//---- resultBox ----
 		resultBox.setModel(new DefaultComboBoxModel<>(new String[] {
-			"Draw",
-			"First Won",
-			"Second Won"
+			"Ничья",
+			"Победа первого",
+			"Победа второго"
 		}));
 
 		//---- removeGameButton ----
-		removeGameButton.setText("Remove Game");
+		removeGameButton.setText("Удалить игру");
 
 		//---- gameInfoButton ----
-		gameInfoButton.setText("Get Game Info");
+		gameInfoButton.setText("Инф. об игре");
 
 		//======== scrollPane1 ========
 		{
@@ -147,7 +147,7 @@ public class AdminView extends IView {
 				new Object[][] {
 				},
 				new String[] {
-					"\u2116", "Figure", "Start Cell", "End Cell", "Comment"
+					"\u2116", "Фигура", "Начальная клетка", "Конечная клетка", "Комментарий"
 				}
 			) {
 				boolean[] columnEditable = new boolean[] {
@@ -162,95 +162,95 @@ public class AdminView extends IView {
 		}
 
 		//---- signOutButton ----
-		signOutButton.setText("Sign Out");
+		signOutButton.setText("Выйти");
 
 		//---- label10 ----
-		label10.setText("Bet ID:");
+		label10.setText("ID ставки:");
 
 		//---- removeBetButton ----
-		removeBetButton.setText("Remove Bet");
+		removeBetButton.setText("Удалить ставку");
 
 		//---- label11 ----
-		label11.setText("Player ID:");
+		label11.setText("ID игрока:");
 
 		//---- label12 ----
-		label12.setText("First Name:");
+		label12.setText("Фамилия:");
 
 		//---- label13 ----
-		label13.setText("Second Name:");
+		label13.setText("Имя:");
 
 		//---- label14 ----
-		label14.setText("Third Name:");
+		label14.setText("Отчество:");
 
 		//---- label15 ----
-		label15.setText("Birth Date:");
+		label15.setText("Дата рождения:");
 
 		//---- label16 ----
-		label16.setText("Country:");
+		label16.setText("Страна:");
 
 		//---- label17 ----
-		label17.setText("Raiting:");
+		label17.setText("Рейтинг:");
 
 		//---- playerRaitingSpinner ----
 		playerRaitingSpinner.setModel(new SpinnerNumberModel(0, 0, null, 1));
 
 		//---- addPlayerButton ----
-		addPlayerButton.setText("Add Player");
+		addPlayerButton.setText("Добавить игрока");
 
 		//---- removePlayerButton ----
-		removePlayerButton.setText("Remove Player");
+		removePlayerButton.setText("Удалить игрока");
 
 		//---- label18 ----
-		label18.setText("Referee ID:");
+		label18.setText("ID судьи:");
 
 		//---- label19 ----
-		label19.setText("First Name:");
+		label19.setText("Фамилия:");
 
 		//---- label20 ----
-		label20.setText("Second Name:");
+		label20.setText("Имя:");
 
 		//---- label21 ----
-		label21.setText("Third Name:");
+		label21.setText("Отчество:");
 
 		//---- label22 ----
-		label22.setText("Birth Date:");
+		label22.setText("Дата рождения:");
 
 		//---- label23 ----
-		label23.setText("Country:");
+		label23.setText("Страна:");
 
 		//---- addRefereeButton ----
-		addRefereeButton.setText("Add Referee");
+		addRefereeButton.setText("Добавить судью");
 
 		//---- removeRefereeButton ----
-		removeRefereeButton.setText("Remove Referee");
+		removeRefereeButton.setText("Удалить судью");
 
 		//---- label24 ----
-		label24.setText("User Login:");
+		label24.setText("Логин:");
 
 		//---- label25 ----
-		label25.setText("Password:");
+		label25.setText("Пароль:");
 
 		//---- label26 ----
-		label26.setText("Role:");
+		label26.setText("Роль:");
 
 		//---- userRoleBox ----
 		userRoleBox.setModel(new DefaultComboBoxModel<>(new String[] {
-			"Admin",
-			"Spectator",
-			"Bookmaker"
+			"Администратор",
+			"Наблюдатель",
+			"Букмекер"
 		}));
 
 		//---- addUserButton ----
-		addUserButton.setText("Add User");
+		addUserButton.setText("Добавить пользователя");
 
 		//---- removeUserButton ----
-		removeUserButton.setText("Remove User");
+		removeUserButton.setText("Удалить пользователя");
 
 		//---- testButton ----
-		testButton.setText("Test");
+		testButton.setText("Тест");
 
 		//---- label27 ----
-		label27.setText("Result:");
+		label27.setText("Результат:");
 
 		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
 		contentPane.setLayout(contentPaneLayout);
