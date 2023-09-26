@@ -7,4 +7,4 @@
 - Redis
 - InfluxDB
 - Telegraf
-- Java
+- Java (Redisson, InfluxDB Client, Swing)
